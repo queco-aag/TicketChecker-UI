@@ -1,0 +1,23 @@
+.app-footer {
+  margin-top: 4rem;
+  padding: 2rem 1rem;
+  background: #f5f5f5;
+  border-top: 3px solid #2196F3;
+  text-align: center;
+}
+
+.footer-content p {
+  margin: 0.5rem 0;
+  color: #333333;
+}
+
+.footer-link a {
+  color: #2196F3;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer-link a:hover {
+  color: #1976D2;
+  text-decoration: underline;
+}
