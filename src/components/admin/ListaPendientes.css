@@ -1,0 +1,65 @@
+.lista-pendientes-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.page-header {
+  margin-bottom: 1rem;
+}
+
+.pendientes-card {
+  border-left: 4px solid #FF9800;
+}
+
+.alert-pendientes {
+  background: #fff3e0;
+  border: 1px solid #FF9800;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #e65100;
+  font-weight: 600;
+}
+
+.alert-pendientes i {
+  font-size: 1.5rem;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.table-header h2 {
+  margin: 0;
+  color: #2196F3;
+}
+
+.pendiente-row {
+  background: #fffbf0 !important;
+}
+
+.pendiente-row:hover {
+  background: #fff8e1 !important;
+}
+
+@media (max-width: 768px) {
+  .table-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .table-header .p-input-icon-left {
+    width: 100%;
+  }
+
+  .table-header .p-input-icon-left input {
+    width: 100%;
+  }
+}

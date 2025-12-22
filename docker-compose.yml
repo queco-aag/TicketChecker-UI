@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  ticketchecker-ui:
+    build: .
+    container_name: ticketchecker-ui
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_URL=http://localhost:8080/api
+      - VITE_APP_TITLE=TicketChecker - ASPADIF
+    restart: unless-stopped
+    networks:
+      - ticketchecker-network
+
+networks:
+  ticketchecker-network:
+    driver: bridge
