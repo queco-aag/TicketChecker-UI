@@ -53,7 +53,7 @@ const ListaPremios = () => {
 
   const marcarComoEnviado = async (id) => {
     try {
-      await premiosAPI.marcarEnviado(id);
+      await rewardsAPI.marcarEnviado(id);
       toast.current.show({
         severity: 'success',
         summary: 'Éxito',
@@ -66,7 +66,7 @@ const ListaPremios = () => {
       toast.current.show({
         severity: 'error',
         summary: 'Error',
-        detail: 'No se pudo marcar el premio como enviado',
+        detail: error.message || 'No se pudo marcar el premio como enviado',
         life: 3000
       });
     }

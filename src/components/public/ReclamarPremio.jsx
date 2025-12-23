@@ -80,7 +80,7 @@ const ReclamarPremio = () => {
       formDataToSend.append('direccion', formData.direccion);
       formDataToSend.append('comprobante', archivo);
 
-      await numerosAPI.reclamar(numero, formDataToSend);
+      await ticketsAPI.reclamar(numero, formDataToSend);
 
       toast.current.show({
         severity: 'success',
@@ -97,7 +97,7 @@ const ReclamarPremio = () => {
       toast.current.show({
         severity: 'error',
         summary: 'Error',
-        detail: error.response?.data?.mensaje || 'No se pudo reclamar el premio. Por favor intente nuevamente.',
+        detail: error.message || 'No se pudo reclamar el premio. Por favor intente nuevamente.',
         life: 5000
       });
     } finally {

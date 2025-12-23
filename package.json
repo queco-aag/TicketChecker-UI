@@ -1,13 +1,17 @@
 {
   "name": "ticketchecker-ui",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
+  "description": "Frontend web application for ASPADIF's lottery/raffle prize management system",
+  "author": "ASPADIF",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "vite",
+    "serve": "vite preview"
   },
   "dependencies": {
     "axios": "^1.13.2",

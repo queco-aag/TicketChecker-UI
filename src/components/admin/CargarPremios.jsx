@@ -52,17 +52,18 @@ const CargarPremios = () => {
       const formData = new FormData();
       formData.append('file', archivo);
 
-      const response = await premiosAPI.cargarCSV(formData);
-      
+      const response = await rewardsAPI.cargarCSV(formData);
+      const mappedResponse = mapUploadResponse(response.data);
+
       setResultado({
         success: true,
-        data: response.data
+        data: mappedResponse
       });
 
       toast.current.show({
         severity: 'success',
         summary: 'Éxito',
-        detail: `Se cargaron ${response.data.cantidad || 0} premios correctamente`,
+        detail: `Se cargaron ${mappedResponse.cantidad || 0} premios correctamente`,
         life: 5000
       });
 
@@ -75,13 +76,13 @@ const CargarPremios = () => {
       console.error('Error al cargar premios:', error);
       setResultado({
         success: false,
-        error: error.response?.data?.mensaje || 'Error al cargar el archivo'
+        error: error.message || 'Error al cargar el archivo'
       });
 
       toast.current.show({
         severity: 'error',
         summary: 'Error',
-        detail: error.response?.data?.mensaje || 'No se pudo cargar el archivo CSV',
+        detail: error.message || 'No se pudo cargar el archivo CSV',
         life: 5000
       });
     } finally {

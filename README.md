@@ -4,6 +4,17 @@ Frontend web application for ASPADIF's lottery/raffle prize management system. B
 
 ![ASPADIF Logo](http://www.aspadif.org/photogallery/logos/)
 
+> **Version 2.0.0** - Actualizado con nueva arquitectura de API REST. Ver [CHANGELOG.md](CHANGELOG.md) para detalles.
+
+## 📚 Documentación
+
+- **[SUMMARY.md](SUMMARY.md)** - Resumen ejecutivo de cambios y adaptación
+- **[MIGRATION_GUIDE.md](MIGRATION_GUIDE.md)** - Guía completa de migración v2.0
+- **[API_INTEGRATION.md](API_INTEGRATION.md)** - Documentación de endpoints de la API
+- **[docs/API_INTEGRATION_GUIDE.md](docs/API_INTEGRATION_GUIDE.md)** - Guía técnica de integración
+- **[CHANGELOG.md](CHANGELOG.md)** - Historial de cambios
+- **[VERIFICATION_CHECKLIST.md](VERIFICATION_CHECKLIST.md)** - Lista de verificación
+
 ## 🎯 About
 
 TicketChecker-UI is a complete web frontend for managing lottery/raffle prizes for ASPADIF (Asociación de Padres de Personas con Discapacidad Intelectual de Fuenlabrada). The application provides a public interface for ticket verification and prize claiming, as well as an administrative panel for managing prizes and shipments.
@@ -142,21 +153,85 @@ The application integrates with the TicketChecker backend API. Configure the API
 
 ### API Endpoints Used
 
-- `GET /api/numeros/{numero}/verificar` - Verify ticket number
-- `POST /api/numeros/{numero}/reclamar` - Claim prize
-- `POST /api/premios/cargar-csv` - Upload prizes CSV
-- `GET /api/premios/reclamados` - Get claimed prizes
-- `GET /api/premios/pendientes` - Get pending prizes
-- `GET /api/premios/enviados` - Get shipped prizes
-- `PUT /api/premios/{id}/marcar-enviado` - Mark as shipped
+#### Public Endpoints
+- `GET /api/tickets/{numero}/verify` - Verify ticket number and check for prize
+- `POST /api/tickets/{numero}/claim` - Claim a prize with winner information
+
+#### Admin Endpoints
+- `POST /api/admin/rewards/upload` - Upload prizes from CSV file
+- `GET /api/admin/rewards/claimed` - Get all claimed prizes
+- `GET /api/admin/rewards/pending` - Get prizes pending shipment
+- `GET /api/admin/rewards/shipped` - Get shipped prizes
+- `PUT /api/admin/rewards/{id}/ship` - Mark a prize as shipped
+- `GET /api/admin/rewards` - Get all loaded prizes
+- `DELETE /api/admin/rewards/{id}` - Delete a prize
+
+#### Authentication Endpoints (Future)
+- `POST /api/auth/login` - Admin login
+- `POST /api/auth/logout` - Admin logout
+- `GET /api/auth/verify` - Verify authentication token
+
+### API Request/Response Examples
+
+#### Verify Ticket
+**Request:**
+```
+GET /api/tickets/12345/verify
+```
+
+**Response (200 OK):**
+```json
+{
+  "hasReward": true,
+  "ticket": {
+    "number": "12345",
+    "reward": {
+      "id": 1,
+      "name": "Bicicleta",
+      "description": "Bicicleta de montaña",
+      "imageUrl": "https://ejemplo.com/bici.jpg",
+      "claimed": false
+    }
+  }
+}
+```
+
+#### Claim Prize
+**Request:**
+```
+POST /api/tickets/12345/claim
+Content-Type: multipart/form-data
+
+nombre=Juan Pérez
+contacto=juan@email.com
+direccion=Calle Principal 123
+comprobante=[file]
+```
+
+**Response (200 OK):**
+```json
+{
+  "message": "Premio reclamado exitosamente",
+  "claimId": 123
+}
+```
 
 ### CSV Format for Prize Upload
+
+The CSV file must have the following columns:
 
 ```csv
 numero,nombre_premio,descripcion,url_foto
 001,Bicicleta,Bicicleta de montaña,https://ejemplo.com/bici.jpg
 002,Tablet,Tablet 10 pulgadas,https://ejemplo.com/tablet.jpg
+003,Auriculares,Auriculares inalámbricos,https://ejemplo.com/auriculares.jpg
 ```
+
+**Column descriptions:**
+- `numero` (required): Ticket number
+- `nombre_premio` (required): Prize name
+- `descripcion` (optional): Prize description
+- `url_foto` (optional): URL of prize image
 
 ## 🎯 Usage
 

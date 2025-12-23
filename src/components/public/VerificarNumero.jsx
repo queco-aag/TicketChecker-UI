@@ -30,10 +30,12 @@ const VerificarNumero = () => {
     setResultado(null);
 
     try {
-      const response = await numerosAPI.verificar(numero);
-      setResultado(response.data);
-      
-      if (response.data.tienePremio) {
+      const response = await ticketsAPI.verificar(numero);
+      // Mapear la respuesta de la API al formato esperado
+      const mappedData = mapTicketVerificationResponse(response.data);
+      setResultado(mappedData);
+
+      if (mappedData.tienePremio) {
         toast.current.show({
           severity: 'success',
           summary: '¡Felicidades!',
@@ -53,7 +55,7 @@ const VerificarNumero = () => {
       toast.current.show({
         severity: 'error',
         summary: 'Error',
-        detail: 'No se pudo verificar el número. Por favor intente nuevamente.',
+        detail: error.message || 'No se pudo verificar el número. Por favor intente nuevamente.',
         life: 3000
       });
     } finally {

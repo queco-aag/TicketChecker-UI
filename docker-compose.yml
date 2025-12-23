@@ -8,6 +8,7 @@ services:
       - "3000:80"
     environment:
       - VITE_API_URL=http://localhost:8080/api
+      - VITE_API_TIMEOUT=30000
       - VITE_APP_TITLE=TicketChecker - ASPADIF
     restart: unless-stopped
     networks:

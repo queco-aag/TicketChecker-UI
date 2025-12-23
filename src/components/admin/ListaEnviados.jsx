@@ -24,14 +24,15 @@ const ListaEnviados = () => {
   const loadPremios = async () => {
     setLoading(true);
     try {
-      const response = await premiosAPI.obtenerEnviados();
-      setPremios(response.data);
+      const response = await rewardsAPI.obtenerEnviados();
+      const mappedPremios = mapRewards(response.data);
+      setPremios(mappedPremios);
     } catch (error) {
       console.error('Error al cargar premios enviados:', error);
       toast.current.show({
         severity: 'error',
         summary: 'Error',
-        detail: 'No se pudieron cargar los premios enviados',
+        detail: error.message || 'No se pudieron cargar los premios enviados',
         life: 3000
       });
     } finally {

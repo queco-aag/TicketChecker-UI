@@ -25,9 +25,9 @@ const AdminPanel = () => {
     setLoading(true);
     try {
       const [reclamados, pendientes, enviados] = await Promise.all([
-        premiosAPI.obtenerReclamados(),
-        premiosAPI.obtenerPendientes(),
-        premiosAPI.obtenerEnviados()
+        rewardsAPI.obtenerReclamados(),
+        rewardsAPI.obtenerPendientes(),
+        rewardsAPI.obtenerEnviados()
       ]);
 
       setStats({
@@ -40,7 +40,7 @@ const AdminPanel = () => {
       toast.current.show({
         severity: 'error',
         summary: 'Error',
-        detail: 'No se pudieron cargar las estadísticas',
+        detail: error.message || 'No se pudieron cargar las estadísticas',
         life: 3000
       });
     } finally {
