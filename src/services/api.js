@@ -59,34 +59,34 @@ api.interceptors.response.use(
   }
 );
 
-// API de Tickets (Endpoints públicos)
-export const ticketsAPI = {
+// API de Números (Endpoints públicos)
+export const numerosAPI = {
   /**
-   * Verificar si un número de ticket tiene premio
-   * @param {string} numero - Número del ticket a verificar
+   * Verificar si un número tiene premio
+   * @param {string} numero - Número a verificar
    * @returns {Promise} Respuesta con información del premio si existe
    */
-  verificar: (numero) => api.get(`/tickets/${numero}/verify`),
+  verificar: (numero) => api.get(`/numeros/${numero}/verificar`),
 
   /**
-   * Reclamar un premio asociado a un ticket
+   * Reclamar un premio asociado a un número
    * @param {string} numero - Número del ticket
    * @param {FormData} formData - Datos del formulario con información del ganador
    * @returns {Promise} Confirmación de reclamo
    */
-  reclamar: (numero, formData) => api.post(`/tickets/${numero}/claim`, formData, {
+  reclamar: (numero, formData) => api.post(`/numeros/${numero}/reclamar`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
 };
 
-// API de Premios/Recompensas (Endpoints administrativos)
-export const rewardsAPI = {
+// API de Premios (Endpoints administrativos)
+export const premiosAPI = {
   /**
    * Cargar premios desde un archivo CSV
    * @param {FormData} formData - Archivo CSV con los premios
    * @returns {Promise} Resultado de la carga
    */
-  cargarCSV: (formData) => api.post('/admin/rewards/upload', formData, {
+  cargarCSV: (formData) => api.post('/premios/cargar-csv', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
 
@@ -95,64 +95,63 @@ export const rewardsAPI = {
    * @param {number} id - ID del premio
    * @returns {Promise} Confirmación de actualización
    */
-  marcarEnviado: (id) => api.put(`/admin/rewards/${id}/ship`),
+  marcarEnviado: (id) => api.put(`/premios/${id}/marcar-enviado`),
 
   /**
    * Obtener lista de premios enviados
    * @returns {Promise} Array de premios enviados
    */
-  obtenerEnviados: () => api.get('/admin/rewards/shipped'),
+  obtenerEnviados: () => api.get('/premios/enviados'),
 
   /**
    * Obtener lista de premios pendientes de envío
    * @returns {Promise} Array de premios pendientes
    */
-  obtenerPendientes: () => api.get('/admin/rewards/pending'),
+  obtenerPendientes: () => api.get('/premios/pendientes'),
 
   /**
    * Obtener lista de premios reclamados
    * @returns {Promise} Array de premios reclamados
    */
-  obtenerReclamados: () => api.get('/admin/rewards/claimed'),
-
-  /**
-   * Obtener todos los premios cargados
-   * @returns {Promise} Array de todos los premios
-   */
-  obtenerTodos: () => api.get('/admin/rewards'),
-
-  /**
-   * Eliminar un premio
-   * @param {number} id - ID del premio
-   * @returns {Promise} Confirmación de eliminación
-   */
-  eliminar: (id) => api.delete(`/admin/rewards/${id}`),
+  obtenerReclamados: () => api.get('/premios/reclamados'),
 };
 
-// API de Autenticación (para futuras implementaciones)
+// API de Autenticación
 export const authAPI = {
   /**
-   * Login de administrador
-   * @param {Object} credentials - Credenciales (usuario, contraseña)
+   * Registrar un nuevo usuario
+   * @param {Object} userData - Datos del usuario (username, password, email, fullName)
+   * @returns {Promise} Token de autenticación y datos del usuario
+   */
+  register: (userData) => api.post('/auth/register', userData),
+
+  /**
+   * Login de usuario
+   * @param {Object} credentials - Credenciales (username, password)
    * @returns {Promise} Token de autenticación
    */
   login: (credentials) => api.post('/auth/login', credentials),
 
   /**
-   * Logout de administrador
-   * @returns {Promise} Confirmación de logout
-   */
-  logout: () => api.post('/auth/logout'),
-
-  /**
-   * Verificar token actual
+   * Obtener información del usuario actual
    * @returns {Promise} Información del usuario autenticado
    */
-  verificarToken: () => api.get('/auth/verify'),
+  me: () => api.get('/auth/me'),
+
+  /**
+   * Crear primer administrador (solo funciona si no hay admins)
+   * @param {Object} adminData - Datos del administrador
+   * @returns {Promise} Token de autenticación
+   */
+  createFirstAdmin: (adminData) => api.post('/auth/first-admin', adminData),
+
+  /**
+   * Registrar nuevo administrador (requiere rol ADMIN)
+   * @param {Object} adminData - Datos del administrador
+   * @returns {Promise} Token de autenticación
+   */
+  registerAdmin: (adminData) => api.post('/auth/register-admin', adminData),
 };
 
-// Mantener compatibilidad con código existente
-export const numerosAPI = ticketsAPI;
-export const premiosAPI = rewardsAPI;
-
 export default api;
+

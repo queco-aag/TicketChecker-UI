@@ -4,30 +4,26 @@
  */
 
 /**
- * Mapea la respuesta de verificación de ticket de la API al formato del frontend
+ * Mapea la respuesta de verificación de número de la API al formato esperado por el frontend
  * @param {Object} apiResponse - Respuesta de la API
  * @returns {Object} Datos mapeados para el frontend
  */
-export const mapTicketVerificationResponse = (apiResponse) => {
-  // Si la API usa hasReward en lugar de tienePremio
-  if (apiResponse.hasReward !== undefined) {
-    return {
-      tienePremio: apiResponse.hasReward,
-      numero: apiResponse.ticket?.number || apiResponse.numero,
-      premio: apiResponse.ticket?.reward ? {
-        id: apiResponse.ticket.reward.id,
-        nombrePremio: apiResponse.ticket.reward.name || apiResponse.ticket.reward.nombrePremio,
-        descripcion: apiResponse.ticket.reward.description || apiResponse.ticket.reward.descripcion,
-        urlFoto: apiResponse.ticket.reward.imageUrl || apiResponse.ticket.reward.urlFoto,
-        reclamado: apiResponse.ticket.reward.claimed !== undefined
-          ? apiResponse.ticket.reward.claimed
-          : apiResponse.ticket.reward.reclamado
-      } : null
-    };
-  }
-
-  // Si la API ya usa el formato esperado, retornar como está
-  return apiResponse;
+export const mapNumeroVerificationResponse = (apiResponse) => {
+  // Estructura según openapi.yaml:
+  // {success: true, premiado: true, mensaje: "...", premio: {...}, reclamado: false}
+  return {
+    tienePremio: apiResponse.premiado || false,
+    numero: apiResponse.numero,
+    reclamado: apiResponse.reclamado || false,
+    mensaje: apiResponse.mensaje,
+    premio: apiResponse.premio ? {
+      id: apiResponse.premio.id,
+      nombrePremio: apiResponse.premio.nombre,
+      descripcion: apiResponse.premio.descripcion,
+      urlFoto: apiResponse.premio.urlFoto,
+      enviado: apiResponse.premio.enviado
+    } : null
+  };
 };
 
 /**
@@ -86,10 +82,14 @@ export const mapUploadResponse = (apiResponse) => {
 export const prepareClaimData = (claimData) => {
   const formData = new FormData();
 
-  // Mapear nombres de campos si es necesario
+  // Mapear nombres de campos según openapi.yaml
   formData.append('nombre', claimData.nombre);
   formData.append('contacto', claimData.contacto);
-  formData.append('direccion', claimData.direccion);
+
+  // El campo se llama "direccionEnvio" en la API
+  if (claimData.direccion) {
+    formData.append('direccionEnvio', claimData.direccion);
+  }
 
   if (claimData.comprobante) {
     formData.append('comprobante', claimData.comprobante);

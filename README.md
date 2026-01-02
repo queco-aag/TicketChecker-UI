@@ -221,17 +221,17 @@ comprobante=[file]
 The CSV file must have the following columns:
 
 ```csv
-numero,nombre_premio,descripcion,url_foto
+numero,nombrePremio,descripcionPremio,urlFotoPremio
 001,Bicicleta,Bicicleta de montaña,https://ejemplo.com/bici.jpg
 002,Tablet,Tablet 10 pulgadas,https://ejemplo.com/tablet.jpg
 003,Auriculares,Auriculares inalámbricos,https://ejemplo.com/auriculares.jpg
 ```
 
 **Column descriptions:**
-- `numero` (required): Ticket number
-- `nombre_premio` (required): Prize name
-- `descripcion` (optional): Prize description
-- `url_foto` (optional): URL of prize image
+- `numero` (required): Número del ticket
+- `nombrePremio` (required): Nombre del premio
+- `descripcionPremio` (optional): Descripción del premio
+- `urlFotoPremio` (optional): URL de la foto del premio
 
 ## 🎯 Usage
 

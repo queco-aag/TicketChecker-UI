@@ -53,7 +53,7 @@ const ListaPremios = () => {
 
   const marcarComoEnviado = async (id) => {
     try {
-      await rewardsAPI.marcarEnviado(id);
+      await premiosAPI.marcarEnviado(id);
       toast.current.show({
         severity: 'success',
         summary: 'Éxito',

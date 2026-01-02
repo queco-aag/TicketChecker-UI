@@ -52,7 +52,7 @@ const CargarPremios = () => {
       const formData = new FormData();
       formData.append('file', archivo);
 
-      const response = await rewardsAPI.cargarCSV(formData);
+      const response = await premiosAPI.cargarCSV(formData);
       const mappedResponse = mapUploadResponse(response.data);
 
       setResultado({

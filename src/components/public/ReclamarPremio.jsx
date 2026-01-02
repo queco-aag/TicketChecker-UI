@@ -77,10 +77,10 @@ const ReclamarPremio = () => {
       const formDataToSend = new FormData();
       formDataToSend.append('nombre', formData.nombre);
       formDataToSend.append('contacto', formData.contacto);
-      formDataToSend.append('direccion', formData.direccion);
+      formDataToSend.append('direccionEnvio', formData.direccion);
       formDataToSend.append('comprobante', archivo);
 
-      await ticketsAPI.reclamar(numero, formDataToSend);
+      await numerosAPI.reclamar(numero, formDataToSend);
 
       toast.current.show({
         severity: 'success',

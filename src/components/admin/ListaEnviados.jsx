@@ -24,8 +24,8 @@ const ListaEnviados = () => {
   const loadPremios = async () => {
     setLoading(true);
     try {
-      const response = await rewardsAPI.obtenerEnviados();
-      const mappedPremios = mapRewards(response.data);
+      const response = await premiosAPI.obtenerEnviados();
+      const mappedPremios = mapNumerosPremiados(response.data);
       setPremios(mappedPremios);
     } catch (error) {
       console.error('Error al cargar premios enviados:', error);

@@ -30,9 +30,9 @@ const VerificarNumero = () => {
     setResultado(null);
 
     try {
-      const response = await ticketsAPI.verificar(numero);
+      const response = await numerosAPI.verificar(numero);
       // Mapear la respuesta de la API al formato esperado
-      const mappedData = mapTicketVerificationResponse(response.data);
+      const mappedData = mapNumeroVerificationResponse(response.data);
       setResultado(mappedData);
 
       if (mappedData.tienePremio) {
