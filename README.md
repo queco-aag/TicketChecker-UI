@@ -1,101 +1,100 @@
 # TicketChecker-UI
 
-Reescritura del frontend en React + PrimeReact, conectada al contrato definido en `openapi.yaml`.
+Frontend de verificacion y reclamacion de premios para ASPADIF, reescrito con React + PrimeReact y alineado con el contrato OpenAPI del backend.
 
-## Documentacion centralizada
+## Resumen ejecutivo del frontal
 
-Toda la documentacion y scripts nuevos se movieron fuera de la raiz:
+- Portal publico para verificar si un numero esta premiado y registrar su reclamacion.
+- Panel administrativo con autenticacion para carga masiva de premios, seguimiento de reclamados y control de envios.
+- Integracion con API REST v1 con manejo de errores uniforme y mensajes para usuario final.
+- Base preparada para evolucionar: documentacion centralizada, arquitectura por features y scripts operativos.
 
-- Documentacion: `project-resources/docs/README.md`
-- Arquitectura: `project-resources/docs/ARQUITECTURA_FRONTEND.md`
-- Contrato API: `project-resources/docs/API_CONTRATO_OPENAPI.md`
-- Migracion y validacion: `project-resources/docs/MIGRACION_Y_VALIDACION.md`
-- Scripts PowerShell: `project-resources/scripts/`
+## Resumen tecnico del frontal
+
+- Stack: React (Vite), PrimeReact, PrimeIcons, PrimeFlex, Axios y React Router.
+- Arquitectura de codigo: `src/app` (router/layouts), `src/features` (public/admin), `src/shared` (api/auth/mappers).
+- Cliente HTTP en `src/shared/api/client.js` con interceptores para token bearer y gestion centralizada de errores.
+- Autenticacion admin persistida en `localStorage` con guard de rutas (`RequireAuth`).
+- Base URL configurable por entorno (`VITE_API_URL`) y timeout (`VITE_API_TIMEOUT`).
 
 ## Arranque rapido
 
-1. Instala dependencias con `npm install`
-2. Configura `.env` (ejemplo recomendado):
-   - `VITE_API_URL=http://localhost:8080/api/v1`
-   - `VITE_API_TIMEOUT=30000`
-3. Ejecuta `npm run dev`
+```bash
+npm install
+npm run dev
+```
 
-## Scripts del proyecto
+Variables recomendadas en `.env`:
 
-- `npm run dev`
-- `npm run build`
-- `npm run lint`
+- `VITE_API_URL=http://localhost:8080/api/v1`
+- `VITE_API_TIMEOUT=30000`
 
-Tambien puedes usar:
+## Scripts
 
-- `project-resources/scripts/dev.ps1`
-- `project-resources/scripts/build.ps1`
-- `project-resources/scripts/lint.ps1`
+```bash
+npm run dev
+npm run lint
+npm run build
+npm run preview
+```
 
-1. Download the logo from: http://www.aspadif.org/photogallery/logos/
-2. Save as `public/assets/logo-aspadif.png`
-3. The header will automatically display the logo
+Tambien disponibles scripts PowerShell en `project-resources/scripts/`.
 
-## 🌐 Routes
+## Ejecucion con Docker
 
-- `/` - Home page (ticket verification)
-- `/reclamar/:numero` - Prize claim form
-- `/admin` - Admin dashboard
-- `/admin/cargar` - Upload prizes CSV
-- `/admin/premios` - All prizes list
-- `/admin/enviados` - Shipped prizes
-- `/admin/pendientes` - Pending shipments
+Este frontend se entrega para ejecutarse como imagen Docker (Nginx + SPA compilada).
 
-## 🔒 Security Notes
+Importante: las variables `VITE_*` se aplican en build-time.
 
-- File uploads are validated (type and size)
-- Forms include client-side validation
-- API calls include error handling
-- Confirmation dialogs for destructive actions
+```bash
+docker compose build \
+  --build-arg VITE_API_URL=http://localhost:8080/api/v1 \
+  --build-arg VITE_API_TIMEOUT=30000
 
-**Note:** This version does not include authentication. For production use, consider adding authentication for admin routes.
+docker compose up -d
+```
 
-## 🛠️ Development
+URL de acceso esperada: `http://localhost:3000`.
 
-### Available Scripts
+## Documentacion (docs)
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+Indice principal:
 
-### Code Style
+- `docs/README.md`
 
-- Components use functional components with hooks
-- Spanish language for all UI text
-- PrimeReact components used throughout
-- Responsive design (mobile-first)
-- Error handling with toast notifications
+Producto:
 
-## 📱 Responsive Design
+- `docs/producto/RESUMEN_EJECUTIVO.md`
+- `docs/producto/SUMMARY.md`
 
-The application is fully responsive and works on:
-- Desktop (1200px+)
-- Tablet (768px - 1199px)
-- Mobile (< 768px)
+API:
 
-## 🤝 Contributing
+- `docs/api/API_CONTRATO_OPENAPI.md`
+- `docs/api/API_ENDPOINTS.md`
+- `docs/api/API_INTEGRATION.md`
+- `docs/api/API_INTEGRATION_GUIDE.md`
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
+Migracion:
 
-## 📄 License
+- `docs/migracion/MIGRATION_GUIDE.md`
+- `docs/migracion/ADAPTACION_API.md`
+- `docs/migracion/INTEGRACION_COMPLETADA.md`
+- `docs/migracion/MIGRACION_Y_VALIDACION.md`
 
-This project is developed for ASPADIF (Asociación de Padres de Personas con Discapacidad Intelectual de Fuenlabrada).
+Tecnico:
 
-## 📞 Contact
+- `docs/tecnico/ARQUITECTURA_FRONTEND.md`
+- `docs/tecnico/FILE_INDEX.md`
+- `docs/tecnico/README_PROJECT_RESOURCES.md`
 
-For questions or support, contact ASPADIF:
-- Website: http://www.aspadif.org
+Operacion y QA:
 
----
+- `docs/operacion/GETTING_STARTED.md`
+- `docs/operacion/VERIFICATION_CHECKLIST.md`
+- `docs/operacion/CHANGELOG.md`
 
-Developed with ❤️ for ASPADIF
+## Contrato OpenAPI de referencia
+
+El contrato fuente compartido con backend se encuentra en:
+
+- `C:\Workspace\Particular\TicketChecker\src\main\resources\openapi.yaml`

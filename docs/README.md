@@ -1,57 +1,42 @@
-# Documentación TicketChecker-UI
+# Documentacion de TicketChecker-UI
 
-Esta carpeta contiene la documentación técnica del proyecto.
+Esta carpeta centraliza toda la documentacion funcional y tecnica del frontend.
 
-## Guías Disponibles
+## Indice por secciones
 
-### [API Integration Guide](./API_INTEGRATION_GUIDE.md)
-Guía completa de integración con la API backend. Incluye:
-- Arquitectura de la integración
-- Configuración de servicios
-- Ejemplos de código
-- Mapeo de datos
-- Interceptores HTTP
-- Manejo de errores
-- Troubleshooting
+### Producto
 
-## Guías en la Raíz del Proyecto
+- `docs/producto/RESUMEN_EJECUTIVO.md`
+- `docs/producto/SUMMARY.md`
 
-### [README.md](../README.md)
-Documentación general del proyecto, instalación y uso.
+### API
 
-### [MIGRATION_GUIDE.md](../MIGRATION_GUIDE.md)
-Guía detallada de los cambios realizados en la versión 2.0.0 y cómo migrar.
+- `docs/api/API_CONTRATO_OPENAPI.md`
+- `docs/api/API_ENDPOINTS.md`
+- `docs/api/API_INTEGRATION.md`
+- `docs/api/API_INTEGRATION_GUIDE.md`
 
-### [API_INTEGRATION.md](../API_INTEGRATION.md)
-Análisis de la API backend y estructura de endpoints.
+### Migracion
 
-### [SUMMARY.md](../SUMMARY.md)
-Resumen ejecutivo de la adaptación del proyecto a la nueva API.
+- `docs/migracion/MIGRATION_GUIDE.md`
+- `docs/migracion/ADAPTACION_API.md`
+- `docs/migracion/INTEGRACION_COMPLETADA.md`
+- `docs/migracion/MIGRACION_Y_VALIDACION.md`
 
-## Navegación Rápida
+### Tecnico
 
-### Para Desarrolladores Frontend
-1. Leer [SUMMARY.md](../SUMMARY.md) para entender los cambios
-2. Revisar [MIGRATION_GUIDE.md](../MIGRATION_GUIDE.md) para detalles
-3. Consultar [API_INTEGRATION_GUIDE.md](./API_INTEGRATION_GUIDE.md) para integración
+- `docs/tecnico/ARQUITECTURA_FRONTEND.md`
+- `docs/tecnico/FILE_INDEX.md`
+- `docs/tecnico/README_PROJECT_RESOURCES.md`
 
-### Para Desarrolladores Backend
-1. Leer [API_INTEGRATION.md](../API_INTEGRATION.md) para ver endpoints esperados
-2. Revisar [API_INTEGRATION_GUIDE.md](./API_INTEGRATION_GUIDE.md) sección de seguridad
+### Operacion y QA
 
-### Para Testing/QA
-1. Leer [SUMMARY.md](../SUMMARY.md) sección de testing
-2. Seguir [MIGRATION_GUIDE.md](../MIGRATION_GUIDE.md) para casos de prueba
+- `docs/operacion/GETTING_STARTED.md`
+- `docs/operacion/VERIFICATION_CHECKLIST.md`
+- `docs/operacion/CHANGELOG.md`
 
-## Contribuir
+## Punto de entrada del proyecto
 
-Para agregar o actualizar documentación:
-1. Crear archivo Markdown en esta carpeta
-2. Actualizar este README con el enlace
-3. Usar formato claro y ejemplos de código
-4. Incluir tabla de contenidos si el documento es largo
+- `README.md`
 
----
-
-**Última actualización:** 23 de Diciembre, 2025
-
+El `README.md` de raiz incluye el resumen ejecutivo/técnico del frontal y enlaces a este indice.

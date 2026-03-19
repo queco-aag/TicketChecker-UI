@@ -1,6 +1,11 @@
 # Stage 1: Build
-FROM node:18-alpine AS build
+FROM node:20.19-alpine AS build
 WORKDIR /app
+
+ARG VITE_API_URL=http://localhost:8080/api/v1
+ARG VITE_API_TIMEOUT=30000
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_API_TIMEOUT=$VITE_API_TIMEOUT
 
 # Copy package files
 COPY package*.json ./
