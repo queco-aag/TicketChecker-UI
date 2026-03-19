@@ -25,9 +25,9 @@ const AdminPanel = () => {
     setLoading(true);
     try {
       const [reclamados, pendientes, enviados] = await Promise.all([
-        rewardsAPI.obtenerReclamados(),
-        rewardsAPI.obtenerPendientes(),
-        rewardsAPI.obtenerEnviados()
+        premiosAPI.obtenerReclamados(),
+        premiosAPI.obtenerPendientes(),
+        premiosAPI.obtenerEnviados()
       ]);
 
       setStats({
@@ -136,6 +136,19 @@ const AdminPanel = () => {
                 icon="pi pi-arrow-right"
                 className="p-button-success"
                 onClick={() => navigate('/admin/enviados')}
+              />
+            </Card>
+
+            <Card className="action-card">
+              <h3>
+                <i className="pi pi-folder"></i> Proyectos
+              </h3>
+              <p>Gestionar proyectos y sus repositorios asociados</p>
+              <Button
+                label="Gestionar Proyectos"
+                icon="pi pi-arrow-right"
+                className="p-button-info"
+                onClick={() => navigate('/admin/proyectos')}
               />
             </Card>
           </div>

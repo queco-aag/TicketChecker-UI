@@ -75,6 +75,65 @@ export const mapUploadResponse = (apiResponse) => {
 };
 
 /**
+ * Mapea un proyecto de la API al formato del frontend
+ * @param {Object} proyecto - Proyecto de la API
+ * @returns {Object} Proyecto mapeado
+ */
+export const mapProyecto = (proyecto) => {
+  return {
+    id: proyecto.id,
+    nombre: proyecto.nombre || proyecto.name,
+    descripcion: proyecto.descripcion || proyecto.description,
+    activo: (() => {
+      if (proyecto.activo !== undefined) return proyecto.activo;
+      if (proyecto.active !== undefined) return proyecto.active;
+      return true;
+    })(),
+    fechaCreacion: proyecto.fechaCreacion || proyecto.createdAt,
+  };
+};
+
+/**
+ * Mapea un array de proyectos
+ * @param {Array} proyectos - Array de proyectos de la API
+ * @returns {Array} Array de proyectos mapeados
+ */
+export const mapProyectos = (proyectos) => {
+  if (!Array.isArray(proyectos)) {
+    return [];
+  }
+  return proyectos.map(mapProyecto);
+};
+
+/**
+ * Mapea un repositorio de la API al formato del frontend
+ * @param {Object} repositorio - Repositorio de la API
+ * @returns {Object} Repositorio mapeado
+ */
+export const mapRepositorio = (repositorio) => {
+  return {
+    id: repositorio.id,
+    proyectoId: repositorio.proyectoId || repositorio.projectId,
+    nombre: repositorio.nombre || repositorio.name,
+    descripcion: repositorio.descripcion || repositorio.description,
+    url: repositorio.url,
+    fechaCreacion: repositorio.fechaCreacion || repositorio.createdAt,
+  };
+};
+
+/**
+ * Mapea un array de repositorios
+ * @param {Array} repositorios - Array de repositorios de la API
+ * @returns {Array} Array de repositorios mapeados
+ */
+export const mapRepositorios = (repositorios) => {
+  if (!Array.isArray(repositorios)) {
+    return [];
+  }
+  return repositorios.map(mapRepositorio);
+};
+
+/**
  * Prepara los datos de reclamo para enviar a la API
  * @param {Object} claimData - Datos del formulario de reclamo
  * @returns {FormData} FormData preparado para la API

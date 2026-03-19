@@ -153,5 +153,68 @@ export const authAPI = {
   registerAdmin: (adminData) => api.post('/auth/register-admin', adminData),
 };
 
+// API de Proyectos (Endpoints administrativos)
+export const proyectosAPI = {
+  /**
+   * Obtener lista de todos los proyectos
+   * @returns {Promise} Array de proyectos
+   */
+  listar: () => api.get('/proyectos'),
+
+  /**
+   * Obtener un proyecto por su ID
+   * @param {number} id - ID del proyecto
+   * @returns {Promise} Proyecto
+   */
+  obtener: (id) => api.get(`/proyectos/${id}`),
+
+  /**
+   * Crear un nuevo proyecto
+   * @param {Object} proyecto - Datos del proyecto
+   * @returns {Promise} Proyecto creado
+   */
+  crear: (proyecto) => api.post('/proyectos', proyecto),
+
+  /**
+   * Actualizar un proyecto existente
+   * @param {number} id - ID del proyecto
+   * @param {Object} proyecto - Datos actualizados del proyecto
+   * @returns {Promise} Proyecto actualizado
+   */
+  actualizar: (id, proyecto) => api.put(`/proyectos/${id}`, proyecto),
+
+  /**
+   * Eliminar un proyecto
+   * @param {number} id - ID del proyecto
+   * @returns {Promise} Confirmación de eliminación
+   */
+  eliminar: (id) => api.delete(`/proyectos/${id}`),
+
+  /**
+   * Obtener los repositorios asociados a un proyecto
+   * @param {number} proyectoId - ID del proyecto
+   * @returns {Promise} Array de repositorios
+   */
+  listarRepositorios: (proyectoId) => api.get(`/proyectos/${proyectoId}/repositorios`),
+
+  /**
+   * Agregar un repositorio a un proyecto
+   * @param {number} proyectoId - ID del proyecto
+   * @param {Object} repositorio - Datos del repositorio
+   * @returns {Promise} Repositorio creado
+   */
+  agregarRepositorio: (proyectoId, repositorio) =>
+    api.post(`/proyectos/${proyectoId}/repositorios`, repositorio),
+
+  /**
+   * Eliminar un repositorio de un proyecto
+   * @param {number} proyectoId - ID del proyecto
+   * @param {number} repositorioId - ID del repositorio
+   * @returns {Promise} Confirmación de eliminación
+   */
+  eliminarRepositorio: (proyectoId, repositorioId) =>
+    api.delete(`/proyectos/${proyectoId}/repositorios/${repositorioId}`),
+};
+
 export default api;
 

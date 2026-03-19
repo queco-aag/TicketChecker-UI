@@ -8,6 +8,7 @@ import CargarPremios from './components/admin/CargarPremios';
 import ListaPremios from './components/admin/ListaPremios';
 import ListaEnviados from './components/admin/ListaEnviados';
 import ListaPendientes from './components/admin/ListaPendientes';
+import GestionProyectos from './components/admin/GestionProyectos';
 
 // PrimeReact imports
 import 'primereact/resources/themes/lara-light-blue/theme.css';
@@ -28,6 +29,7 @@ function App() {
           <Route path="admin/premios" element={<ListaPremios />} />
           <Route path="admin/enviados" element={<ListaEnviados />} />
           <Route path="admin/pendientes" element={<ListaPendientes />} />
+          <Route path="admin/proyectos" element={<GestionProyectos />} />
         </Route>
       </Routes>
     </BrowserRouter>
