@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { numerosAPI } from '../../services/api';
+import { mapNumeroVerificationResponse } from '../../services/apiMappers';
 import './VerificarNumero.css';
 
 const VerificarNumero = () => {

@@ -7,6 +7,7 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 import { premiosAPI } from '../../services/api';
+import { mapRewards } from '../../services/apiMappers';
 import './ListaEnviados.css';
 
 const ListaEnviados = () => {
@@ -25,7 +26,7 @@ const ListaEnviados = () => {
     setLoading(true);
     try {
       const response = await premiosAPI.obtenerEnviados();
-      const mappedPremios = mapNumerosPremiados(response.data);
+      const mappedPremios = mapRewards(response.data);
       setPremios(mappedPremios);
     } catch (error) {
       console.error('Error al cargar premios enviados:', error);

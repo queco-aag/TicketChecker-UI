@@ -25,9 +25,9 @@ const AdminPanel = () => {
     setLoading(true);
     try {
       const [reclamados, pendientes, enviados] = await Promise.all([
-        rewardsAPI.obtenerReclamados(),
-        rewardsAPI.obtenerPendientes(),
-        rewardsAPI.obtenerEnviados()
+        premiosAPI.obtenerReclamados(),
+        premiosAPI.obtenerPendientes(),
+        premiosAPI.obtenerEnviados()
       ]);
 
       setStats({

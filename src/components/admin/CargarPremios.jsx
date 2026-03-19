@@ -7,6 +7,7 @@ import { Toast } from 'primereact/toast';
 import { Message } from 'primereact/message';
 import { ProgressBar } from 'primereact/progressbar';
 import { premiosAPI } from '../../services/api';
+import { mapUploadResponse } from '../../services/apiMappers';
 import './CargarPremios.css';
 
 const CargarPremios = () => {
