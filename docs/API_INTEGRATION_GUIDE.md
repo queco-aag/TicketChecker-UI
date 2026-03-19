@@ -4,6 +4,7 @@
 
 Este documento describe cómo el frontend TicketChecker-UI se integra con la API backend del sistema TicketChecker.
 
+
 ## Arquitectura de la Integración
 
 ```
