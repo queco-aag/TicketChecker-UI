@@ -28,8 +28,11 @@ const ClaimsTable = ({ title, data, loading, showShipAction = false, onShip = nu
   };
 
   return (
-    <section>
-      <h2>{title}</h2>
+    <section className="table-page">
+      <div className="table-page-header">
+        <h2>{title}</h2>
+        <span className="table-page-count">{data.length} registros</span>
+      </div>
       <DataTable value={data} loading={loading} paginator rows={10} emptyMessage="Sin datos para mostrar.">
         <Column field="numero" header="Numero" sortable />
         <Column body={premioBody} header="Premio" />

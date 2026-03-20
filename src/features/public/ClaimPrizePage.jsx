@@ -62,7 +62,7 @@ const ClaimPrizePage = () => {
   };
 
   return (
-    <Card title={`Reclamar ticket ${numero}`} subTitle="Completa tus datos para gestionar el envio.">
+    <Card className="page-card" title={`Reclamar ticket ${numero}`} subTitle="Completa tus datos para gestionar el envio.">
       <Toast ref={toast} />
 
       <form className="claim-form" onSubmit={handleSubmit}>

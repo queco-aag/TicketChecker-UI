@@ -45,7 +45,7 @@ const VerifyTicketPage = () => {
   };
 
   return (
-    <Card title="Verificar ticket" subTitle="Consulta si tu numero tiene premio.">
+    <Card className="page-card" title="Verificar ticket" subTitle="Consulta si tu numero tiene premio.">
       <Toast ref={toast} />
 
       <div className="form-grid">

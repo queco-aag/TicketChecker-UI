@@ -53,7 +53,7 @@ const AdminLoginPage = () => {
 
   return (
     <div className="auth-shell">
-      <Card title="Acceso administracion" subTitle="Autenticacion contra /auth/login">
+      <Card className="auth-card" title="Acceso administracion" subTitle="Autenticacion contra /auth/login">
         <Toast ref={toast} />
 
         <div className="claim-form">
@@ -65,10 +65,13 @@ const AdminLoginPage = () => {
             Contrasena
             <Password value={password} onChange={(e) => setPassword(e.target.value)} feedback={false} toggleMask />
           </label>
-          <Button label="Entrar" icon="pi pi-sign-in" onClick={login} loading={loading} />
-          <Link to="/">
-            <Button label="Volver al inicio" text />
-          </Link>
+
+          <div className="auth-actions">
+            <Button label="Entrar" icon="pi pi-sign-in" onClick={login} loading={loading} />
+            <Link to="/">
+              <Button label="Volver al inicio" text />
+            </Link>
+          </div>
         </div>
       </Card>
     </div>

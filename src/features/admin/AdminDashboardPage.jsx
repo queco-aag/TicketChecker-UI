@@ -48,7 +48,7 @@ const AdminDashboardPage = () => {
   );
 
   return (
-    <section>
+    <section className="dashboard-page">
       <Toast ref={toast} />
       <h2>Panel administrativo</h2>
       <p>Resumen de estado en tiempo real usando endpoints de premios.</p>
