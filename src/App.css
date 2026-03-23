@@ -62,8 +62,7 @@ a {
   align-items: center;
 }
 
-.app-main,
-.admin-main {
+.app-main {
   display: grid;
   gap: 1.25rem;
 }
@@ -81,7 +80,7 @@ a {
   border: 1px solid var(--brand-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-  padding: 1.2rem;
+  padding: 1.5rem;
 }
 
 .p-card {
@@ -96,7 +95,7 @@ a {
 
 .p-card .p-card-title {
   margin-bottom: 0.25rem;
-  font-size: 1.3rem;
+  font-size: 1.15rem;
 }
 
 .p-card .p-card-subtitle {
@@ -211,14 +210,13 @@ a {
 }
 
 .admin-shell {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1.5rem 1rem 2rem;
-  display: grid;
-  gap: 1rem;
+  min-height: 100vh;
+  background: var(--brand-bg);
 }
 
 .admin-topbar {
+  /*max-width: 1400px;*/
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -228,6 +226,19 @@ a {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   padding: 0.7rem 0.8rem;
+  margin-top: 1.5rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.admin-main {
+/*
+  max-width: 1400px;
+*/
+  margin: 0 auto;
+  padding: 1.5rem 1rem 2rem;
+  display: grid;
+  gap: 1.25rem;
 }
 
 .admin-nav {
@@ -263,6 +274,7 @@ a {
 
 .admin-nav-link i {
   font-size: 0.95rem;
+  margin-right: 0.15rem;
 }
 
 .admin-end {
@@ -326,19 +338,39 @@ a {
 }
 
 .stat-content i {
-  font-size: 1.2rem;
-  width: 2.2rem;
-  height: 2.2rem;
+  font-size: 1.3rem;
+  width: 2.4rem;
+  height: 2.4rem;
   border-radius: 999px;
   display: grid;
   place-items: center;
   background: var(--brand-primary-soft);
   color: var(--brand-primary);
+  flex-shrink: 0;
 }
 
 .table-page h2,
 .dashboard-page h2 {
   margin: 0 0 0.8rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-header h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+}
+
+.page-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
 }
 
 .table-page-header {
@@ -366,6 +398,13 @@ a {
   margin-top: 1rem;
 }
 
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+}
+
 .table-page .p-datatable {
   margin-top: 0.5rem;
 }
@@ -378,6 +417,13 @@ a {
 
 .table-page .p-datatable .p-paginator {
   border-top: 1px solid #e3e8f2;
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 @media (max-width: 768px) {
@@ -424,4 +470,1007 @@ a {
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .home-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .decimo-display {
+    max-width: 100%;
+  }
+
+  .search-input-group {
+    flex-direction: column;
+  }
+
+  .search-button {
+    width: 100%;
+  }
 }
+
+/* ====================================
+   HOME PAGE - Página principal con décimo
+   ==================================== */
+
+.home-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  color: white;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.logo-aspadif {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-aspadif h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.95;
+  font-weight: 500;
+}
+
+.admin-access-btn {
+  background: white !important;
+  color: #667eea !important;
+  border-color: white !important;
+  font-weight: 600;
+}
+
+.admin-access-btn:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
+.hero-section {
+  background: var(--surface);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 2.5rem;
+}
+
+.decimo-display {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.decimo-mockup {
+  width: 100%;
+  max-width: 500px;
+  background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+  border: 3px solid #2d3436;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.decimo-header {
+  background: #2d3436;
+  color: white;
+  padding: 0.8rem 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.decimo-year {
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+}
+
+.decimo-body {
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.decimo-number-display {
+  font-size: 4rem;
+  font-weight: 900;
+  color: #2d3436;
+  letter-spacing: 0.2em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.decimo-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  color: #2d3436;
+  font-weight: 600;
+}
+
+.search-card {
+  margin-top: 2rem;
+  border: 2px solid #e3f2fd !important;
+}
+
+.search-content {
+  text-align: center;
+}
+
+.search-content h2 {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+  color: var(--brand-text);
+}
+
+.search-subtitle {
+  color: #6b7280;
+  margin: 0 0 2rem;
+  font-size: 1.05rem;
+}
+
+.search-input-group {
+  display: flex;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-input-wrapper {
+  flex: 1;
+}
+
+.search-input {
+  font-size: 1.1rem;
+  padding: 0.85rem 1rem 0.85rem 3rem !important;
+}
+
+.search-button {
+  padding: 0.85rem 2rem !important;
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+}
+
+/* ====================================
+   LOGIN DIALOG
+   ==================================== */
+
+.login-dialog-content {
+  padding: 1rem 0;
+}
+
+.login-dialog-description {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.login-form label {
+  font-weight: 600;
+  color: var(--brand-text);
+}
+
+.login-actions {
+  margin-top: 1rem;
+}
+
+/* ====================================
+   VERIFY RESULT PAGE
+   ==================================== */
+
+.verify-result-page {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.result-card {
+  border: 2px solid var(--brand-border) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.result-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.result-tag {
+  font-size: 1rem;
+  padding: 0.6rem 1.2rem;
+}
+
+.numero-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.numero-label {
+  font-weight: 600;
+  color: #1565c0;
+}
+
+.numero-value {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #0d47a1;
+  letter-spacing: 0.15em;
+}
+
+.result-message {
+  font-size: 1.1rem;
+  text-align: center;
+  color: var(--brand-text);
+  margin: 1.5rem 0;
+}
+
+.premio-details {
+  margin-top: 2rem;
+}
+
+.premio-details h3 {
+  margin: 0 0 1.5rem;
+  font-size: 1.5rem;
+  color: var(--brand-primary);
+}
+
+.premio-image-container {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.premio-image {
+  max-width: 400px;
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+}
+
+.premio-info h4 {
+  margin: 0 0 0.5rem;
+  font-size: 1.3rem;
+  color: var(--brand-text);
+}
+
+.premio-info p {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.claim-action {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f0fdf4;
+  border: 2px dashed #86efac;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.claim-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: #166534;
+  font-weight: 600;
+}
+
+.already-claimed {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.no-prize-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.no-prize-info p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+/* ====================================
+   ADMIN - PAGE HEADER
+   ==================================== */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.page-header h2 {
+  margin: 0 0 0.3rem;
+  font-size: 1.6rem;
+}
+
+.page-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.page-header-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* ====================================
+   ADMIN - DIALOG FORMS
+   ==================================== */
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1rem 0;
+}
+
+.dialog-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dialog-form label {
+  font-weight: 600;
+  color: var(--brand-text);
+  font-size: 0.95rem;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--brand-border);
+}
+
+/* ====================================
+   ADMIN - TABLE ACTIONS
+   ==================================== */
+
+.table-actions {
+  display: flex;
+  gap: 0.3rem;
+  justify-content: center;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--surface-muted);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.table-header-left,
+.table-header-right {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* ====================================
+   CODIGO CELL - Para códigos de verificación
+   ==================================== */
+
+.codigo-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.codigo-cell code {
+  background: #f3f4f6;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+}
+
+/* ====================================
+   UTILITIES
+   ==================================== */
+
+.text-muted {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+.mb-3 {
+  margin-bottom: 1rem;
+}
+
+.block {
+  display: block;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.gap-1 {
+  gap: 0.25rem;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* ====================================
+   PRIMEREACT OVERRIDES - Mejoras de espaciado
+   ==================================== */
+
+.p-dialog .p-dialog-header {
+  padding: 1.5rem 1.5rem 1rem;
+}
+
+.p-dialog .p-dialog-content {
+  padding: 1rem 1.5rem 1.5rem;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  padding: 1rem;
+  font-weight: 600;
+  background: #f9fafb;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: 1rem;
+}
+
+.p-card .p-card-body {
+  padding: 1.5rem;
+}
+
+.p-card .p-card-content {
+  padding: 0;
+}
+
+.p-button {
+  padding: 0.65rem 1.2rem;
+  font-weight: 600;
+}
+
+.p-button-lg {
+  padding: 0.85rem 1.5rem;
+  font-size: 1.1rem;
+}
+
+.p-inputtext,
+.p-inputtextarea,
+.p-dropdown:not(.p-paginator .p-dropdown) {
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+
+.p-dropdown {
+  min-width: 200px;
+}
+
+/* El dropdown del paginador es más compacto */
+.p-paginator .p-dropdown {
+  min-width: 4rem !important;
+  padding: 0 !important;
+}
+
+/* Espaciado mejorado para tags */
+.p-tag {
+  padding: 0.45rem 0.85rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.p-tag .p-tag-icon {
+  font-size: 0.875rem;
+  margin-right: 0.35rem;
+}
+
+/* Tooltips */
+.p-tooltip .p-tooltip-text {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+/* ====================================
+   MEJORAS DE ESPACIADO PARA ICONOS
+   ==================================== */
+
+/* Espaciado consistente para iconos en botones */
+.p-button-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Mejorar el espaciado en botones con icono y texto */
+.p-button:not(.p-button-icon-only) .p-button-icon-left {
+  margin-right: 0.5rem;
+}
+
+.p-button:not(.p-button-icon-only) .p-button-icon-right {
+  margin-left: 0.5rem;
+}
+
+/* Ajustar tamaño de iconos en botones pequeños */
+.p-button-sm .p-button-icon {
+  font-size: 0.875rem;
+}
+
+/* Mejorar alineamiento en celdas de acciones de tabla */
+.table-actions .p-button {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-actions .p-button-icon {
+  margin: 0 !important;
+}
+
+/* Mejorar espaciado en dropdowns */
+.p-dropdown-trigger {
+  width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.p-dropdown-trigger .p-dropdown-trigger-icon {
+  font-size: 0.875rem;
+}
+
+/* Botones de InputNumber más compactos */
+.p-inputnumber-button {
+  width: 2.5rem !important;
+  padding: 0 !important;
+}
+
+.p-inputnumber-button .p-button-icon {
+  font-size: 0.875rem;
+}
+
+/* InputNumber en horizontal (con botones a los lados) - POR DEFECTO */
+.p-inputnumber-horizontal,
+.p-inputnumber-buttons-horizontal {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+}
+
+.p-inputnumber-horizontal .p-inputnumber-button-group,
+.p-inputnumber-buttons-horizontal .p-inputnumber-button-group {
+  display: inline-flex !important;
+  flex-direction: row !important;
+}
+
+.p-inputnumber-horizontal .p-inputnumber-button,
+.p-inputnumber-buttons-horizontal .p-inputnumber-button {
+  width: 2.5rem !important;
+  height: 100%;
+}
+
+/* InputNumber en vertical (con botones arriba/abajo) - SOLO SI SE ESPECIFICA */
+.p-inputnumber-vertical .p-inputnumber-button-group,
+.p-inputnumber-buttons-vertical .p-inputnumber-button-group {
+  width: 2.5rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.p-inputnumber-vertical .p-inputnumber-button,
+.p-inputnumber-buttons-vertical .p-inputnumber-button {
+  width: 100% !important;
+  height: 1.5rem !important;
+  padding: 0 !important;
+}
+
+/* Mejorar espaciado en calendarios y otros componentes */
+.p-calendar .p-inputtext {
+  padding: 0.75rem 0.875rem;
+}
+
+.p-calendar .p-datepicker-trigger {
+  width: 2.5rem;
+}
+
+/* Alineamiento vertical de iconos */
+.p-button-icon,
+.pi {
+  vertical-align: middle;
+  line-height: 1;
+}
+
+/* Mejorar el espaciado en el FileUpload */
+.p-fileupload .p-fileupload-buttonbar .p-button {
+  margin-right: 0.5rem;
+}
+
+.p-fileupload .p-button .p-button-icon {
+  margin-right: 0.4rem;
+}
+
+/* Checkbox y Radio con mejor espaciado */
+.p-checkbox-label,
+.p-radiobutton-label {
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+/* InputGroup con mejor espaciado */
+.p-inputgroup .p-inputgroup-addon {
+  padding: 0.75rem 0.875rem;
+  min-width: 2.5rem;
+}
+
+.p-inputgroup .p-inputgroup-addon .pi {
+  font-size: 1rem;
+}
+
+/* Mensajes con mejor espaciado de iconos */
+.p-message .p-message-icon {
+  font-size: 1.1rem;
+  margin-right: 0.5rem;
+}
+
+/* Toast con mejor espaciado */
+.p-toast .p-toast-message-icon {
+  font-size: 1.5rem;
+  margin-right: 0.75rem;
+}
+
+/* Mejoras para DataTable */
+.p-datatable .p-sortable-column .p-sortable-column-icon {
+  margin-left: 0.35rem;
+  font-size: 0.85rem;
+}
+
+.p-datatable .p-column-header-content {
+  display: flex;
+  align-items: center;
+}
+
+.p-datatable-tbody > tr > td {
+  line-height: 1.5;
+}
+
+/* Paginator con mejor espaciado */
+.p-paginator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  gap: 0.5rem;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.p-paginator .p-paginator-icon {
+  font-size: 0.875rem;
+}
+
+/* Dropdown del paginador (rows per page) */
+.p-paginator .p-dropdown {
+  height: 2.5rem;
+  min-width: 4rem;
+  padding: 0;
+}
+
+.p-paginator .p-dropdown .p-dropdown-label {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.p-paginator .p-dropdown .p-dropdown-trigger {
+  width: 2rem;
+}
+
+.p-paginator .p-dropdown .p-dropdown-trigger-icon {
+  font-size: 0.875rem;
+}
+
+/* Botones first, prev, next, last */
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-last {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Current page report */
+.p-paginator .p-paginator-current {
+  font-size: 0.9rem;
+  color: #6b7280;
+  padding: 0 0.5rem;
+}
+
+/* Panel del dropdown del paginador */
+.p-paginator .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+/* Asegurar que el dropdown esté correctamente alineado */
+.p-paginator .p-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ajustar el input del dropdown para que no tenga padding extra */
+.p-paginator .p-dropdown .p-inputtext {
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.9rem !important;
+  border-radius: 0 !important;
+}
+
+/* Container del paginador pages */
+.p-paginator .p-paginator-pages {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Alinear verticalmente todos los elementos del paginador */
+.p-paginator .p-paginator-left,
+.p-paginator .p-paginator-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ====================================
+   INPUT NUMBER IMPROVEMENTS
+   ==================================== */
+
+/* InputNumber general - mejor alineamiento */
+.p-inputnumber {
+  display: inline-flex;
+  align-items: center;
+}
+
+.p-inputnumber-input {
+  text-align: center;
+  flex: 1;
+}
+
+/* Botones de InputNumber más compactos y proporcionados */
+.p-inputnumber-button-group {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Forzar que los botones siempre estén en horizontal */
+.p-inputnumber-buttons-horizontal .p-inputnumber-button-group,
+.p-inputnumber-buttons-stacked .p-inputnumber-button-group {
+  display: flex !important;
+  flex-direction: row !important;
+}
+
+.p-inputnumber-button {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.p-inputnumber-button:enabled:hover {
+  background: #1565c0;
+  border-color: #1565c0;
+}
+
+/* Asegurar que los iconos estén centrados */
+.p-inputnumber-button .p-icon {
+  margin: 0 !important;
+}
+
+/* Orden correcto: decrement - input - increment */
+.p-inputnumber-button-group {
+  order: initial;
+}
+
+.p-inputnumber .p-inputnumber-button-down {
+  order: 0;
+}
+
+.p-inputnumber .p-inputnumber-input {
+  order: 1;
+}
+
+.p-inputnumber .p-inputnumber-button-up {
+  order: 2;
+}
+
+/* InputNumber en el header de tabla - más compacto */
+.table-header .p-inputnumber {
+  max-width: 140px;
+  height: 2.5rem;
+}
+
+.table-header .p-inputnumber-input {
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.9rem !important;
+  height: 2.5rem !important;
+  line-height: 1.5 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.table-header .p-inputnumber-button {
+  width: 2.2rem !important;
+  height: 2.5rem !important;
+}
+
+/* Dropdown en el header de tabla - también más compacto */
+.table-header .p-dropdown {
+  max-width: 140px;
+  height: 2.5rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.table-header .p-dropdown .p-dropdown-label {
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.table-header .p-dropdown .p-dropdown-trigger {
+  width: 2.2rem !important;
+  height: 2.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* InputText en el header de tabla */
+.table-header .p-inputtext {
+  height: 2.5rem;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Asegurar que todos los elementos del table-header tengan la misma altura */
+.table-header .p-button {
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-header .p-input-icon-left > .p-inputtext {
+  padding-left: 2.5rem !important;
+}
+
+.table-header .p-input-icon-left > i {
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: 0;
+}
+
+/* ====================================
+   DIALOG HEADER ICONS
+   ==================================== */
+
+.p-dialog .p-dialog-header-icon {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.p-dialog .p-dialog-header-icon .p-dialog-header-close-icon {
+  font-size: 1rem;
+}
+

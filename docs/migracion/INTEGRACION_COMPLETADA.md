@@ -210,7 +210,8 @@ npm run dev
 - [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md) - Guía de migración
 
 ### Archivos OpenAPI
-- `TicketChecker/src/main/resources/openapi.yaml` - Especificación oficial
+- [`../api/openapi.yaml`](../api/openapi.yaml) - Especificación oficial (copia local)
+- Fuente backend: `TicketChecker/src/main/resources/openapi.yaml`
 
 ---
 

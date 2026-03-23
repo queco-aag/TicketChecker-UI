@@ -48,15 +48,23 @@ export const ticketsAPI = {
 };
 
 export const rewardsAPI = {
+  // Carga masiva
   cargarCSV: (formData) =>
     api.post('/premios/cargar-csv', formData, {
       requiresAuth: true,
       headers: { 'Content-Type': 'multipart/form-data' }
     }),
+  // Gestión de estado
   marcarEnviado: (id) => api.put(`/premios/${id}/marcar-enviado`, {}, { requiresAuth: true }),
   obtenerEnviados: () => api.get('/premios/enviados', { requiresAuth: true }),
   obtenerPendientes: () => api.get('/premios/pendientes', { requiresAuth: true }),
-  obtenerReclamados: () => api.get('/premios/reclamados', { requiresAuth: true })
+  obtenerReclamados: () => api.get('/premios/reclamados', { requiresAuth: true }),
+  // CRUD de premios
+  listarPremios: () => api.get('/premios', { requiresAuth: true }),
+  crearPremio: (premio) => api.post('/premios', premio, { requiresAuth: true }),
+  actualizarPremio: (id, premio) => api.put(`/premios/${id}`, premio, { requiresAuth: true }),
+  eliminarPremio: (id) => api.delete(`/premios/${id}`, { requiresAuth: true }),
+  obtenerDisponibles: () => api.get('/premios', { requiresAuth: true })
 };
 
 export const authAPI = {
@@ -64,7 +72,33 @@ export const authAPI = {
   login: (credentials) => api.post('/auth/login', credentials),
   me: () => api.get('/auth/me', { requiresAuth: true }),
   createFirstAdmin: (adminData) => api.post('/auth/first-admin', adminData),
-  registerAdmin: (adminData) => api.post('/auth/register-admin', adminData, { requiresAuth: true })
+  registerAdmin: (adminData) => api.post('/auth/register-admin', adminData, { requiresAuth: true }),
+  // Gestión de usuarios
+  listarUsuarios: () => api.get('/usuarios', { requiresAuth: true }),
+  actualizarUsuario: (id, userData) => api.put(`/usuarios/${id}`, userData, { requiresAuth: true }),
+  eliminarUsuario: (id) => api.delete(`/usuarios/${id}`, { requiresAuth: true }),
+  cambiarRol: (id, role) => api.put(`/usuarios/${id}/role`, { role }, { requiresAuth: true })
+};
+
+
+export const emparejamientosAPI = {
+  listar: () => api.get('/numeros-premiados', { requiresAuth: true }),
+  crear: (emparejamiento) => api.post('/numeros-premiados', emparejamiento, { requiresAuth: true }),
+  actualizar: (id, emparejamiento) => api.put(`/numeros-premiados/${id}`, emparejamiento, { requiresAuth: true }),
+  eliminar: (id) => api.delete(`/numeros-premiados/${id}`, { requiresAuth: true })
+};
+
+export const clavesAPI = {
+  listar: () => api.get('/claves', { requiresAuth: true }),
+  crear: (clave) => api.post('/claves', clave, { requiresAuth: true }),
+  obtenerPorAnio: (anio) => api.get(`/claves/${anio}`, { requiresAuth: true }),
+  eliminarPorAnio: (anio) => api.delete(`/claves/${anio}`, { requiresAuth: true }),
+  listarNumerosConCodigos: (anio, desde, hasta) =>
+    api.get(`/claves/${anio}/numeros`, { params: { desde, hasta }, requiresAuth: true }),
+  exportarCSV: (anio, desde, hasta) =>
+    api.get(`/claves/${anio}/exportar-csv`, { params: { desde, hasta }, requiresAuth: true, responseType: 'blob' }),
+  verificarBoleto: (numero, codigo, anio) =>
+    api.post('/claves/verificar-boleto', { numero, codigo, anio })
 };
 
 export default api;

@@ -11,6 +11,8 @@ Esta carpeta centraliza toda la documentacion funcional y tecnica del frontend.
 
 ### API
 
+- `docs/api/README.md` - Índice de documentación de API
+- `docs/api/openapi.yaml` - **Especificación OpenAPI 3.0 del contrato de API**
 - `docs/api/API_CONTRATO_OPENAPI.md`
 - `docs/api/API_ENDPOINTS.md`
 - `docs/api/API_INTEGRATION.md`
@@ -26,6 +28,8 @@ Esta carpeta centraliza toda la documentacion funcional y tecnica del frontend.
 ### Tecnico
 
 - `docs/tecnico/ARQUITECTURA_FRONTEND.md`
+- `docs/tecnico/NUEVOS_FLUJOS.md` - Documentación de flujos rediseñados
+- `docs/tecnico/CAMPOS_MANTENIMIENTOS.md` - Detalle completo de campos en mantenimientos
 - `docs/tecnico/FILE_INDEX.md`
 - `docs/tecnico/README_PROJECT_RESOURCES.md`
 

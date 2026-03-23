@@ -13,9 +13,13 @@ const ClaimedListPage = () => {
     const load = async () => {
       setLoading(true);
       try {
-        const { data } = await rewardsAPI.obtenerReclamados();
-        setRows(mapListaNumerosPremiados(data));
+        const response = await rewardsAPI.obtenerReclamados();
+        const dataArray = response.data?.numerosPremiados ||
+                         response.data?.reclamados ||
+                         (Array.isArray(response.data) ? response.data : []);
+        setRows(mapListaNumerosPremiados(dataArray));
       } catch (error) {
+        setRows([]);
         toast.current.show({ severity: 'error', summary: 'Error', detail: error.message, life: 4000 });
       } finally {
         setLoading(false);

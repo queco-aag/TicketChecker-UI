@@ -2,11 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Card } from 'primereact/card';
 import { Toast } from 'primereact/toast';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Dropdown } from 'primereact/dropdown';
 import { rewardsAPI } from '../../shared/api/client';
 
 const AdminDashboardPage = () => {
   const toast = useRef(null);
+  const currentYear = new Date().getFullYear();
   const [loading, setLoading] = useState(true);
+  const [selectedYear, setSelectedYear] = useState(currentYear);
   const [stats, setStats] = useState({ reclamados: 0, pendientes: 0, enviados: 0 });
 
   useEffect(() => {
@@ -36,25 +39,46 @@ const AdminDashboardPage = () => {
     };
 
     load();
-  }, []);
+  }, [selectedYear]);
 
   const cards = useMemo(
     () => [
       { label: 'Reclamados', value: stats.reclamados, icon: 'pi pi-inbox', className: 'stat-card' },
-      { label: 'Pendientes', value: stats.pendientes, icon: 'pi pi-clock', className: 'stat-card warning' },
+      { label: 'Pendientes de Envío', value: stats.pendientes, icon: 'pi pi-clock', className: 'stat-card warning' },
       { label: 'Enviados', value: stats.enviados, icon: 'pi pi-send', className: 'stat-card success' }
     ],
     [stats]
   );
 
+  const yearOptions = useMemo(() => {
+    const years = [];
+    for (let i = currentYear; i >= currentYear - 5; i--) {
+      years.push({ label: `Año ${i}`, value: i });
+    }
+    return years;
+  }, [currentYear]);
+
   return (
     <section className="dashboard-page">
       <Toast ref={toast} />
-      <h2>Panel administrativo</h2>
-      <p>Resumen de estado en tiempo real usando endpoints de premios.</p>
+
+      <div className="page-header">
+        <div>
+          <h2>Panel Administrativo - Año {selectedYear}</h2>
+          <p>Resumen de estado de premios y reclamaciones</p>
+        </div>
+        <Dropdown
+          value={selectedYear}
+          options={yearOptions}
+          onChange={(e) => setSelectedYear(e.value)}
+          placeholder="Seleccionar año"
+        />
+      </div>
 
       {loading ? (
-        <ProgressSpinner />
+        <div className="loading-container">
+          <ProgressSpinner />
+        </div>
       ) : (
         <div className="stats-grid">
           {cards.map((card) => (

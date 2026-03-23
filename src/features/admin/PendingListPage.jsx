@@ -12,9 +12,13 @@ const PendingListPage = () => {
   const load = async () => {
     setLoading(true);
     try {
-      const { data } = await rewardsAPI.obtenerPendientes();
-      setRows(mapListaNumerosPremiados(data));
+      const response = await rewardsAPI.obtenerPendientes();
+      const dataArray = response.data?.numerosPremiados ||
+                       response.data?.pendientes ||
+                       (Array.isArray(response.data) ? response.data : []);
+      setRows(mapListaNumerosPremiados(dataArray));
     } catch (error) {
+      setRows([]);
       toast.current.show({ severity: 'error', summary: 'Error', detail: error.message, life: 4000 });
     } finally {
       setLoading(false);

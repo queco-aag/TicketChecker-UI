@@ -1,5 +1,9 @@
 # Contrato API implementado
 
+## Especificación OpenAPI
+
+La especificación completa del API se encuentra en: [`openapi.yaml`](./openapi.yaml)
+
 Base URL por defecto:
 
 - `http://localhost:8080/api/v1`

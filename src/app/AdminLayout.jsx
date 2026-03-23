@@ -8,8 +8,13 @@ const AdminLayout = () => {
 
   const navItems = [
     { to: '/admin', label: 'Dashboard', icon: 'pi pi-home', end: true },
-    { to: '/admin/cargar-csv', label: 'Cargar CSV', icon: 'pi pi-upload' },
-    { to: '/admin/reclamados', label: 'Reclamados', icon: 'pi pi-list' },
+    { to: '/admin/usuarios', label: 'Usuarios', icon: 'pi pi-users' },
+    { to: '/admin/premios', label: 'Premios', icon: 'pi pi-gift' },
+    { to: '/admin/cargar-csv', label: 'Carga CSV', icon: 'pi pi-upload' },
+    { to: '/admin/emparejamiento', label: 'Emparejamiento', icon: 'pi pi-link' },
+    { to: '/admin/claves-ano', label: 'Claves Año', icon: 'pi pi-key' },
+    { to: '/admin/numeros-codigos', label: 'Números/Códigos', icon: 'pi pi-list' },
+    { to: '/admin/reclamados', label: 'Reclamados', icon: 'pi pi-inbox' },
     { to: '/admin/pendientes', label: 'Pendientes', icon: 'pi pi-clock' },
     { to: '/admin/enviados', label: 'Enviados', icon: 'pi pi-send' }
   ];
@@ -23,7 +28,7 @@ const AdminLayout = () => {
         text
         onClick={() => {
           removeSession();
-          navigate('/admin/login');
+          navigate('/');
         }}
       />
       <Link to="/">

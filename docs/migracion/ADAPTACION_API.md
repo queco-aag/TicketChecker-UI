@@ -252,9 +252,10 @@ Los endpoints de autenticación ya están disponibles en `authAPI`, pero los com
 
 ## 📚 Referencias
 
-- **OpenAPI Specification:** `C:\Workspace\Particular\TicketChecker\src\main\resources\openapi.yaml`
-- **Documentación de Endpoints:** `API_ENDPOINTS.md`
-- **README Principal:** `README.md`
+- **OpenAPI Specification:** [`../api/openapi.yaml`](../api/openapi.yaml) (especificación local)
+- **Fuente backend:** `C:\Workspace\Particular\TicketChecker\src\main\resources\openapi.yaml`
+- **Documentación de Endpoints:** [`../api/API_ENDPOINTS.md`](../api/API_ENDPOINTS.md)
+- **README Principal:** [`../../README.md`](../../README.md)
 
 ---
 

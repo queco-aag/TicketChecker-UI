@@ -10,10 +10,10 @@
 
 ## 📌 ¿Qué se hizo?
 
-He adaptado completamente el proyecto **TicketChecker-UI** para que funcione con el API correcto definido en el repositorio:
+He adaptado completamente el proyecto **TicketChecker-UI** para que funcione con el API correcto definido en:
 
-**Repositorio Backend:** `https://github.com/queco-aag/TicketChecker`  
-**Especificación:** `src/main/resources/openapi.yaml`
+**Especificación API:** [`../api/openapi.yaml`](../api/openapi.yaml) (copia local incluida en el proyecto)  
+**Repositorio Backend:** `https://github.com/queco-aag/TicketChecker`
 
 ---
 
