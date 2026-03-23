@@ -117,8 +117,7 @@ const NumbersVerificationListPage = () => {
           onValueChange={(e) => setRangoDesde(e.value || 1)}
           placeholder="Desde"
           min={1}
-          showButtons
-          buttonLayout="horizontal"
+          butqtonLayout="horizontal"
           style={{ width: '120px' }}
         />
         <InputNumber

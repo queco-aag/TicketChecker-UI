@@ -113,11 +113,11 @@ const HomePage = () => {
             <i className="pi pi-gift" style={{ fontSize: '3rem', color: '#1976d2' }} />
             <h1>ASPADIF</h1>
           </div>
-          <p className="tagline">Lotería Solidaria</p>
+          <p className="tagline">Sorteo Solidario</p>
         </div>
 
         <Button
-          label="Acceso Administración"
+          label="Login"
           icon="pi pi-sign-in"
           outlined
           onClick={() => setShowLoginDialog(true)}
@@ -130,13 +130,13 @@ const HomePage = () => {
         <div className="decimo-display">
           <div className="decimo-mockup">
             <div className="decimo-header">
-              <span>LOTERÍA ASPADIF</span>
+              <span>SORTEO ASPADIF</span>
               <span className="decimo-year">2026</span>
             </div>
             <div className="decimo-body">
               <div className="decimo-number-display">00000</div>
               <div className="decimo-details">
-                <span>Sorteo Especial</span>
+                <span>Sorteo Solidario</span>
                 <span>Consulta si tu número tiene premio</span>
               </div>
             </div>
