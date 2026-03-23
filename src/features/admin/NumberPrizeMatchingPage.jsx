@@ -9,18 +9,28 @@ import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Tag } from 'primereact/tag';
+import { FilterMatchMode } from 'primereact/api';
 import { emparejamientosAPI, rewardsAPI } from '../../shared/api/client';
 
 const NumberPrizeMatchingPage = () => {
   const toast = useRef(null);
+  const dt = useRef(null);
   const [emparejamientos, setEmparejamientos] = useState([]);
   const [premiosDisponibles, setPremiosDisponibles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+  const [globalFilterValue, setGlobalFilterValue] = useState('');
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    numero: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    'premio.nombre': { value: null, matchMode: FilterMatchMode.CONTAINS },
+    nombreReclamante: { value: null, matchMode: FilterMatchMode.CONTAINS }
+  });
   const [formData, setFormData] = useState({
     numero: '',
     premioId: null
   });
+  const [formErrors, setFormErrors] = useState({});
 
   const loadData = async () => {
     setLoading(true);
@@ -56,26 +66,70 @@ const NumberPrizeMatchingPage = () => {
 
   useEffect(() => {
     loadData();
+    initFilters();
   }, []);
+
+  const initFilters = () => {
+    setFilters({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      numero: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      'premio.nombre': { value: null, matchMode: FilterMatchMode.CONTAINS },
+      nombreReclamante: { value: null, matchMode: FilterMatchMode.CONTAINS }
+    });
+    setGlobalFilterValue('');
+  };
+
+  const onGlobalFilterChange = (e) => {
+    const value = e.target.value;
+    const _filters = { ...filters };
+    _filters['global'].value = value;
+    setFilters(_filters);
+    setGlobalFilterValue(value);
+  };
+
+  const clearFilter = () => {
+    initFilters();
+  };
 
   const openNewDialog = () => {
     setFormData({ numero: '', premioId: null });
+    setFormErrors({});
     setShowDialog(true);
   };
 
+  const validateForm = () => {
+    const errors = {};
+
+    if (!formData.numero || !formData.numero.trim()) {
+      errors.numero = 'El número es obligatorio';
+    } else if (!/^\d+$/.test(formData.numero.trim())) {
+      errors.numero = 'El número debe contener solo dígitos';
+    }
+
+    if (!formData.premioId) {
+      errors.premioId = 'Debe seleccionar un premio';
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSave = async () => {
-    if (!formData.numero || !formData.premioId) {
+    if (!validateForm()) {
       toast.current.show({
         severity: 'warn',
         summary: 'Datos incompletos',
-        detail: 'Número y premio son obligatorios.',
+        detail: 'Por favor, complete todos los campos correctamente.',
         life: 3000
       });
       return;
     }
 
     try {
-      // TODO: Implementar endpoint de emparejamiento
+      await emparejamientosAPI.asignar({
+        numero: formData.numero.trim(),
+        premioId: formData.premioId
+      });
       toast.current.show({
         severity: 'success',
         summary: 'Emparejamiento creado',
@@ -83,6 +137,8 @@ const NumberPrizeMatchingPage = () => {
         life: 3000
       });
       setShowDialog(false);
+      setFormData({ numero: '', premioId: null });
+      setFormErrors({});
       loadData();
     } catch (error) {
       toast.current.show({
@@ -137,9 +193,34 @@ const NumberPrizeMatchingPage = () => {
   };
 
   const fechaTemplate = (rowData, field) => {
-    if (!rowData[field]) return '-';
+    if (!rowData[field]) return <span className="text-muted">-</span>;
     const fecha = new Date(rowData[field]);
-    return fecha.toLocaleDateString('es-ES');
+    return fecha.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+  };
+
+  const numeroTemplate = (rowData) => {
+    return <strong>{rowData.numero}</strong>;
+  };
+
+  const premioTemplate = (rowData) => {
+    if (!rowData.premio?.nombre) return <span className="text-muted">-</span>;
+    return (
+      <div>
+        <div>{rowData.premio.nombre}</div>
+        {rowData.premio.categoria && (
+          <small className="text-muted">{rowData.premio.categoria}</small>
+        )}
+      </div>
+    );
+  };
+
+  const reclamanteTemplate = (rowData) => {
+    if (!rowData.nombreReclamante) return <span className="text-muted">Sin reclamar</span>;
+    return rowData.nombreReclamante;
   };
 
   const actionsTemplate = (rowData) => {
@@ -152,6 +233,7 @@ const NumberPrizeMatchingPage = () => {
           severity="danger"
           onClick={() => confirmDelete(rowData)}
           tooltip="Eliminar emparejamiento"
+          tooltipOptions={{ position: 'left' }}
           disabled={rowData.reclamado}
         />
       </div>
@@ -174,22 +256,41 @@ const NumberPrizeMatchingPage = () => {
             icon="pi pi-link"
             onClick={openNewDialog}
           />
-          <Button
-            label="Carga Masiva CSV"
-            icon="pi pi-upload"
-            outlined
-            onClick={() => toast.current.show({
-              severity: 'info',
-              summary: 'Usa Carga CSV',
-              detail: 'Ve a la sección "Cargar CSV" para carga masiva.',
-              life: 3000
-            })}
-          />
         </div>
       </div>
 
       <Card>
+        <div className="table-header">
+          <div className="table-header-left">
+            <span className="p-input-icon-left">
+              <i className="pi pi-search" />
+              <InputText
+                value={globalFilterValue}
+                onChange={onGlobalFilterChange}
+                placeholder="Buscar en todas las columnas..."
+                style={{ width: '300px' }}
+              />
+            </span>
+            {globalFilterValue && (
+              <Button
+                icon="pi pi-filter-slash"
+                label="Limpiar"
+                outlined
+                size="small"
+                onClick={clearFilter}
+              />
+            )}
+          </div>
+          <div className="table-header-right">
+            <Tag
+              value={`${emparejamientos.length} emparejamientos`}
+              severity="info"
+            />
+          </div>
+        </div>
+
         <DataTable
+          ref={dt}
           value={emparejamientos}
           loading={loading}
           paginator
@@ -199,13 +300,35 @@ const NumberPrizeMatchingPage = () => {
           responsiveLayout="scroll"
           sortField="numero"
           sortOrder={1}
+          filters={filters}
+          globalFilterFields={['numero', 'premio.nombre', 'nombreReclamante', 'year']}
           filterDisplay="row"
           size="small"
+          stripedRows
         >
-          <Column field="numero" header="Número" sortable filter filterPlaceholder="Buscar" style={{ width: '130px' }} />
-          <Column field="premio.nombre" header="Premio Asignado" sortable filter filterPlaceholder="Filtrar premio" />
-          <Column field="premio.categoria" header="Categoría" sortable style={{ width: '130px' }} />
-          <Column field="year" header="Año" sortable style={{ width: '90px' }} />
+          <Column
+            field="numero"
+            header="Número"
+            body={numeroTemplate}
+            sortable
+            filter
+            filterPlaceholder="Buscar"
+            style={{ width: '130px' }}
+          />
+          <Column
+            field="premio.nombre"
+            header="Premio Asignado"
+            body={premioTemplate}
+            sortable
+            filter
+            filterPlaceholder="Filtrar premio"
+          />
+          <Column
+            field="year"
+            header="Año"
+            sortable
+            style={{ width: '90px' }}
+          />
           <Column
             field="fechaAsignacion"
             header="Fecha Asignación"
@@ -213,7 +336,15 @@ const NumberPrizeMatchingPage = () => {
             sortable
             style={{ width: '150px' }}
           />
-          <Column field="nombreReclamante" header="Reclamante" sortable filter filterPlaceholder="Buscar" style={{ width: '180px' }} />
+          <Column
+            field="nombreReclamante"
+            header="Reclamante"
+            body={reclamanteTemplate}
+            sortable
+            filter
+            filterPlaceholder="Buscar"
+            style={{ width: '180px' }}
+          />
           <Column
             field="fechaReclamacion"
             header="Fecha Reclamación"
@@ -221,8 +352,20 @@ const NumberPrizeMatchingPage = () => {
             sortable
             style={{ width: '150px' }}
           />
-          <Column field="enviado" header="Estado" body={statusTemplate} sortable style={{ width: '130px' }} />
-          <Column body={actionsTemplate} style={{ width: '100px' }} frozen alignFrozen="right" />
+          <Column
+            field="enviado"
+            header="Estado"
+            body={statusTemplate}
+            sortable
+            style={{ width: '130px' }}
+          />
+          <Column
+            body={actionsTemplate}
+            exportable={false}
+            style={{ width: '100px' }}
+            frozen
+            alignFrozen="right"
+          />
         </DataTable>
       </Card>
 
@@ -230,38 +373,84 @@ const NumberPrizeMatchingPage = () => {
         header="Nuevo Emparejamiento"
         visible={showDialog}
         style={{ width: '500px' }}
-        onHide={() => setShowDialog(false)}
+        onHide={() => {
+          setShowDialog(false);
+          setFormErrors({});
+        }}
         modal
       >
         <div className="dialog-form">
           <div className="field">
-            <label htmlFor="numero">Número de Lotería *</label>
+            <label htmlFor="numero">
+              Número de Lotería <span style={{ color: 'red' }}>*</span>
+            </label>
             <InputText
               id="numero"
               value={formData.numero}
-              onChange={(e) => setFormData({ ...formData, numero: e.target.value })}
+              onChange={(e) => {
+                setFormData({ ...formData, numero: e.target.value });
+                if (formErrors.numero) {
+                  setFormErrors({ ...formErrors, numero: null });
+                }
+              }}
               placeholder="Ej: 12345"
+              className={formErrors.numero ? 'p-invalid' : ''}
+              autoFocus
             />
+            {formErrors.numero && (
+              <small className="p-error">{formErrors.numero}</small>
+            )}
+            <small>Ingrese solo dígitos numéricos</small>
           </div>
 
           <div className="field">
-            <label htmlFor="premio">Premio *</label>
+            <label htmlFor="premio">
+              Premio <span style={{ color: 'red' }}>*</span>
+            </label>
             <Dropdown
               id="premio"
               value={formData.premioId}
               options={premiosDisponibles}
-              onChange={(e) => setFormData({ ...formData, premioId: e.value })}
+              onChange={(e) => {
+                setFormData({ ...formData, premioId: e.value });
+                if (formErrors.premioId) {
+                  setFormErrors({ ...formErrors, premioId: null });
+                }
+              }}
               optionLabel="nombre"
               optionValue="id"
               placeholder="Selecciona un premio"
               filter
               showClear
+              className={formErrors.premioId ? 'p-invalid' : ''}
+              emptyMessage="No hay premios disponibles"
+              emptyFilterMessage="No se encontraron premios"
             />
+            {formErrors.premioId && (
+              <small className="p-error">{formErrors.premioId}</small>
+            )}
+            {premiosDisponibles.length === 0 && (
+              <small className="text-muted">
+                No hay premios disponibles. Cree premios primero en la sección "Premios".
+              </small>
+            )}
           </div>
 
           <div className="dialog-actions">
-            <Button label="Cancelar" outlined onClick={() => setShowDialog(false)} />
-            <Button label="Asociar" icon="pi pi-check" onClick={handleSave} />
+            <Button
+              label="Cancelar"
+              outlined
+              onClick={() => {
+                setShowDialog(false);
+                setFormErrors({});
+              }}
+            />
+            <Button
+              label="Asociar"
+              icon="pi pi-check"
+              onClick={handleSave}
+              disabled={premiosDisponibles.length === 0}
+            />
           </div>
         </div>
       </Dialog>

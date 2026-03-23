@@ -83,9 +83,10 @@ export const authAPI = {
 
 export const emparejamientosAPI = {
   listar: () => api.get('/numeros-premiados', { requiresAuth: true }),
-  crear: (emparejamiento) => api.post('/numeros-premiados', emparejamiento, { requiresAuth: true }),
-  actualizar: (id, emparejamiento) => api.put(`/numeros-premiados/${id}`, emparejamiento, { requiresAuth: true }),
-  eliminar: (id) => api.delete(`/numeros-premiados/${id}`, { requiresAuth: true })
+  obtenerPorNumero: (numero) => api.get(`/numeros-premiados/${encodeURIComponent(numero)}`, { requiresAuth: true }),
+  listarPorPremio: (premioId) => api.get(`/numeros-premiados/premio/${premioId}`, { requiresAuth: true }),
+  asignar: (emparejamiento) => api.post('/numeros-premiados', emparejamiento, { requiresAuth: true }),
+  eliminarPorNumero: (numero) => api.delete(`/numeros-premiados/${encodeURIComponent(numero)}`, { requiresAuth: true })
 };
 
 export const clavesAPI = {

@@ -11,20 +11,29 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Tag } from 'primereact/tag';
 import { Dropdown } from 'primereact/dropdown';
 import { InputSwitch } from 'primereact/inputswitch';
+import { FilterMatchMode } from 'primereact/api';
 import { authAPI } from '../../shared/api/client';
 
 const UsersManagementPage = () => {
   const toast = useRef(null);
+  const dt = useRef(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [globalFilterValue, setGlobalFilterValue] = useState('');
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    username: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    email: { value: null, matchMode: FilterMatchMode.CONTAINS }
+  });
   const [formData, setFormData] = useState({
     username: '',
     password: '',
     email: '',
     fullName: ''
   });
+  const [formErrors, setFormErrors] = useState({});
 
   const loadUsers = async () => {
     setLoading(true);
@@ -55,10 +64,33 @@ const UsersManagementPage = () => {
 
   useEffect(() => {
     loadUsers();
+    initFilters();
   }, []);
+
+  const initFilters = () => {
+    setFilters({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      username: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      email: { value: null, matchMode: FilterMatchMode.CONTAINS }
+    });
+    setGlobalFilterValue('');
+  };
+
+  const onGlobalFilterChange = (e) => {
+    const value = e.target.value;
+    const _filters = { ...filters };
+    _filters['global'].value = value;
+    setFilters(_filters);
+    setGlobalFilterValue(value);
+  };
+
+  const clearFilter = () => {
+    initFilters();
+  };
 
   const openNewDialog = () => {
     setFormData({ username: '', password: '', email: '', fullName: '' });
+    setFormErrors({});
     setEditMode(false);
     setShowDialog(true);
   };
@@ -157,6 +189,17 @@ const UsersManagementPage = () => {
     return <Tag value={rowData.role} severity={severity} />;
   };
 
+  const habilitadoTemplate = (rowData) => {
+    if (rowData.habilitado === undefined || rowData.habilitado === null) {
+      return <Tag value="Activo" severity="success" icon="pi pi-check" />;
+    }
+    return rowData.habilitado ? (
+      <Tag value="Activo" severity="success" icon="pi pi-check" />
+    ) : (
+      <Tag value="Inactivo" severity="danger" icon="pi pi-times" />
+    );
+  };
+
   const actionsTemplate = (rowData) => {
     return (
       <div className="table-actions">
@@ -197,7 +240,37 @@ const UsersManagementPage = () => {
       </div>
 
       <Card>
+        <div className="table-header">
+          <div className="table-header-left">
+            <span className="p-input-icon-left">
+              <i className="pi pi-search" />
+              <InputText
+                value={globalFilterValue}
+                onChange={onGlobalFilterChange}
+                placeholder="Buscar usuarios..."
+                style={{ width: '300px' }}
+              />
+            </span>
+            {globalFilterValue && (
+              <Button
+                icon="pi pi-filter-slash"
+                label="Limpiar"
+                outlined
+                size="small"
+                onClick={clearFilter}
+              />
+            )}
+          </div>
+          <div className="table-header-right">
+            <Tag
+              value={`${users.length} usuarios`}
+              severity="info"
+            />
+          </div>
+        </div>
+
         <DataTable
+          ref={dt}
           value={users}
           loading={loading}
           paginator
@@ -206,12 +279,17 @@ const UsersManagementPage = () => {
           emptyMessage="No hay usuarios registrados"
           responsiveLayout="scroll"
           size="small"
+          filters={filters}
+          globalFilterFields={['username', 'fullName', 'email', 'role']}
+          filterDisplay="row"
+          stripedRows
         >
-          <Column field="username" header="Usuario" sortable />
-          <Column field="fullName" header="Nombre Completo" sortable />
-          <Column field="email" header="Email" sortable />
-          <Column field="role" header="Rol" body={roleTemplate} sortable />
-          <Column body={actionsTemplate} style={{ width: '120px' }} />
+          <Column field="username" header="Usuario" sortable filter filterPlaceholder="Buscar" style={{ width: '180px' }} />
+          <Column field="fullName" header="Nombre Completo" sortable filter filterPlaceholder="Buscar" />
+          <Column field="email" header="Email" sortable filter filterPlaceholder="Buscar" style={{ width: '250px' }} />
+          <Column field="role" header="Rol" body={roleTemplate} sortable style={{ width: '120px' }} />
+          <Column field="habilitado" header="Estado" body={habilitadoTemplate} sortable style={{ width: '120px' }} />
+          <Column body={actionsTemplate} exportable={false} style={{ width: '120px' }} frozen alignFrozen="right" />
         </DataTable>
       </Card>
 
@@ -219,7 +297,10 @@ const UsersManagementPage = () => {
         header={editMode ? 'Editar Usuario' : 'Nuevo Usuario'}
         visible={showDialog}
         style={{ width: '650px', maxHeight: '90vh' }}
-        onHide={() => setShowDialog(false)}
+        onHide={() => {
+          setShowDialog(false);
+          setFormErrors({});
+        }}
         modal
       >
         <div className="dialog-form">
@@ -233,40 +314,7 @@ const UsersManagementPage = () => {
                 disabled={editMode}
                 placeholder="Nombre de usuario"
               />
-            </div>
-
-            <div className="field col-12 md:col-6">
-              <label htmlFor="role">Rol *</label>
-              <Dropdown
-                id="role"
-                value={formData.role}
-                options={[
-                  { label: 'Usuario', value: 'USER' },
-                  { label: 'Administrador', value: 'ADMIN' }
-                ]}
-                onChange={(e) => setFormData({ ...formData, role: e.value })}
-                placeholder="Seleccionar rol"
-              />
-            </div>
-
-            <div className="field col-12 md:col-6">
-              <label htmlFor="fullName">Nombre Completo *</label>
-              <InputText
-                id="fullName"
-                value={formData.fullName}
-                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                placeholder="Nombre y apellidos"
-              />
-            </div>
-
-            <div className="field col-12 md:col-6">
-              <label htmlFor="cargo">Cargo</label>
-              <InputText
-                id="cargo"
-                value={formData.cargo}
-                onChange={(e) => setFormData({ ...formData, cargo: e.target.value })}
-                placeholder="Ej: Gestor de Premios"
-              />
+              {editMode && <small className="text-muted">El nombre de usuario no se puede modificar</small>}
             </div>
 
             <div className="field col-12 md:col-6">
@@ -280,41 +328,29 @@ const UsersManagementPage = () => {
               />
             </div>
 
-            <div className="field col-12 md:col-6">
-              <label htmlFor="telefono">Teléfono</label>
+            <div className="field col-12">
+              <label htmlFor="fullName">Nombre Completo *</label>
               <InputText
-                id="telefono"
-                type="tel"
-                value={formData.telefono}
-                onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
-                placeholder="+34 600 123 456"
+                id="fullName"
+                value={formData.fullName}
+                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                placeholder="Nombre y apellidos"
               />
             </div>
 
-            <div className="field col-12">
-              <label htmlFor="password">
-                Contraseña {editMode ? '(dejar vacío para no cambiar)' : '*'}
-              </label>
-              <Password
-                id="password"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                feedback={!editMode}
-                toggleMask
-                placeholder="Mínimo 8 caracteres"
-              />
-            </div>
-
-            <div className="field col-12">
-              <div className="flex align-items-center gap-2">
-                <InputSwitch
-                  inputId="activo"
-                  checked={formData.activo}
-                  onChange={(e) => setFormData({ ...formData, activo: e.value })}
+            {!editMode && (
+              <div className="field col-12">
+                <label htmlFor="password">Contraseña *</label>
+                <Password
+                  id="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  feedback
+                  toggleMask
+                  placeholder="Mínimo 8 caracteres"
                 />
-                <label htmlFor="activo" className="mb-0">Usuario activo (puede acceder al sistema)</label>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="dialog-actions">

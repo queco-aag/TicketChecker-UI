@@ -6,7 +6,6 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
-import { InputNumber } from 'primereact/inputnumber';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Image } from 'primereact/image';
@@ -21,10 +20,7 @@ const PrizesManagementPage = () => {
   const [formData, setFormData] = useState({
     nombre: '',
     descripcion: '',
-    urlFoto: '',
-    categoria: '',
-    valorEstimado: 0,
-    stock: 0
+    urlFoto: ''
   });
 
   const loadPremios = async () => {
@@ -62,10 +58,7 @@ const PrizesManagementPage = () => {
     setFormData({
       nombre: '',
       descripcion: '',
-      urlFoto: '',
-      categoria: '',
-      valorEstimado: 0,
-      stock: 0
+      urlFoto: ''
     });
     setEditMode(false);
     setShowDialog(true);
@@ -225,23 +218,13 @@ const PrizesManagementPage = () => {
       >
         <div className="dialog-form">
           <div className="p-fluid grid">
-            <div className="field col-12 md:col-8">
+            <div className="field col-12">
               <label htmlFor="nombre">Nombre del Premio *</label>
               <InputText
                 id="nombre"
                 value={formData.nombre}
                 onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
                 placeholder="Ej: PlayStation 5"
-              />
-            </div>
-
-            <div className="field col-12 md:col-4">
-              <label htmlFor="categoria">Categoría</label>
-              <InputText
-                id="categoria"
-                value={formData.categoria}
-                onChange={(e) => setFormData({ ...formData, categoria: e.target.value })}
-                placeholder="Ej: Electrónica"
               />
             </div>
 
@@ -253,31 +236,6 @@ const PrizesManagementPage = () => {
                 onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
                 rows={4}
                 placeholder="Descripción detallada del premio"
-              />
-            </div>
-
-            <div className="field col-12 md:col-6">
-              <label htmlFor="valorEstimado">Valor Estimado (€)</label>
-              <InputNumber
-                inputId="valorEstimado"
-                value={formData.valorEstimado}
-                onValueChange={(e) => setFormData({ ...formData, valorEstimado: e.value })}
-                mode="currency"
-                currency="EUR"
-                locale="es-ES"
-                placeholder="0.00 €"
-              />
-            </div>
-
-            <div className="field col-12 md:col-6">
-              <label htmlFor="stock">Stock Disponible</label>
-              <InputNumber
-                inputId="stock"
-                value={formData.stock}
-                onValueChange={(e) => setFormData({ ...formData, stock: e.value })}
-                min={0}
-                placeholder="Cantidad disponible"
-                showButtons
               />
             </div>
 
