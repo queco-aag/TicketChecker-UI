@@ -124,7 +124,12 @@ const UsersManagementPage = () => {
 
     try {
       if (editMode) {
-        // TODO: Implementar endpoint de actualización
+        // Actualizar usuario - solo email y fullName
+        const updateData = {
+          email: formData.email,
+          fullName: formData.fullName
+        };
+        await authAPI.actualizarUsuario(formData.id, updateData);
         toast.current.show({
           severity: 'success',
           summary: 'Usuario actualizado',
@@ -184,19 +189,46 @@ const UsersManagementPage = () => {
     }
   };
 
+  const handleToggleHabilitado = async (usuario) => {
+    try {
+      await authAPI.toggleHabilitado(usuario.id);
+      toast.current.show({
+        severity: 'success',
+        summary: 'Estado actualizado',
+        detail: `Usuario ${!usuario.habilitado ? 'activado' : 'desactivado'} correctamente.`,
+        life: 3000
+      });
+      loadUsers();
+    } catch (error) {
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error al cambiar estado',
+        detail: error.message,
+        life: 4000
+      });
+    }
+  };
+
   const roleTemplate = (rowData) => {
     const severity = rowData.role === 'ADMIN' ? 'danger' : 'info';
     return <Tag value={rowData.role} severity={severity} />;
   };
 
   const habilitadoTemplate = (rowData) => {
-    if (rowData.habilitado === undefined || rowData.habilitado === null) {
-      return <Tag value="Activo" severity="success" icon="pi pi-check" />;
-    }
-    return rowData.habilitado ? (
-      <Tag value="Activo" severity="success" icon="pi pi-check" />
-    ) : (
-      <Tag value="Inactivo" severity="danger" icon="pi pi-times" />
+    const habilitado = rowData.habilitado === undefined || rowData.habilitado === null ? true : rowData.habilitado;
+    return (
+      <div className="flex align-items-center gap-2">
+        <InputSwitch
+          checked={habilitado}
+          onChange={() => handleToggleHabilitado(rowData)}
+          tooltip={habilitado ? 'Click para desactivar' : 'Click para activar'}
+        />
+        <Tag 
+          value={habilitado ? 'Activo' : 'Inactivo'} 
+          severity={habilitado ? 'success' : 'danger'} 
+          icon={habilitado ? 'pi pi-check' : 'pi pi-times'} 
+        />
+      </div>
     );
   };
 

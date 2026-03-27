@@ -61,6 +61,7 @@ export const rewardsAPI = {
   obtenerReclamados: () => api.get('/premios/reclamados', { requiresAuth: true }),
   // CRUD de premios
   listarPremios: () => api.get('/premios', { requiresAuth: true }),
+  obtenerPremio: (id) => api.get(`/premios/${id}`, { requiresAuth: true }),
   crearPremio: (premio) => api.post('/premios', premio, { requiresAuth: true }),
   actualizarPremio: (id, premio) => api.put(`/premios/${id}`, premio, { requiresAuth: true }),
   eliminarPremio: (id) => api.delete(`/premios/${id}`, { requiresAuth: true }),
@@ -75,8 +76,10 @@ export const authAPI = {
   registerAdmin: (adminData) => api.post('/auth/register-admin', adminData, { requiresAuth: true }),
   // Gestión de usuarios
   listarUsuarios: () => api.get('/usuarios', { requiresAuth: true }),
+  obtenerUsuario: (id) => api.get(`/usuarios/${id}`, { requiresAuth: true }),
   actualizarUsuario: (id, userData) => api.put(`/usuarios/${id}`, userData, { requiresAuth: true }),
   eliminarUsuario: (id) => api.delete(`/usuarios/${id}`, { requiresAuth: true }),
+  toggleHabilitado: (id) => api.patch(`/usuarios/${id}/toggle-habilitado`, {}, { requiresAuth: true }),
   cambiarRol: (id, role) => api.put(`/usuarios/${id}/role`, { role }, { requiresAuth: true })
 };
 
