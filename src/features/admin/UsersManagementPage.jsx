@@ -25,18 +25,27 @@ const UsersManagementPage = () => {
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     username: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    email: { value: null, matchMode: FilterMatchMode.CONTAINS }
+    email: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    role: { value: null, matchMode: FilterMatchMode.EQUALS }
   });
   const [formData, setFormData] = useState({
     username: '',
     password: '',
     email: '',
-    fullName: ''
+    fullName: '',
+    role: 'USER'
   });
-  const [formErrors, setFormErrors] = useState({});
+
+  const roleOptions = [
+    { label: 'Usuario', value: 'USER' },
+    { label: 'Administrador', value: 'ADMIN' }
+  ];
 
   const loadUsers = async () => {
     setLoading(true);
+    // Limpiar el estado antes de cargar para forzar re-render
+    setUsers([]);
+    
     try {
       const response = await authAPI.listarUsuarios();
 
@@ -48,8 +57,82 @@ const UsersManagementPage = () => {
         usersArray = response.data;
       }
 
-      setUsers(usersArray);
+      console.log('========== DEBUG USUARIOS ==========');
+      console.log('Respuesta completa:', response.data);
+      console.log('Array de usuarios:', usersArray);
+      if (usersArray.length > 0) {
+        console.log('Ejemplo de usuario (primero):', usersArray[0]);
+        console.log('Campos disponibles:', Object.keys(usersArray[0]));
+      }
+      console.log('====================================');
+
+      // Normalizar datos: asegurar que cada usuario tenga un campo role
+      const normalizedUsers = usersArray.map(user => {
+        console.log(`Usuario "${user.username}":`, {
+          role: user.role,
+          rol: user.rol,
+          roles: user.roles,
+          authorities: user.authorities
+        });
+        
+        // Función helper para extraer rol
+        const extractRole = (user) => {
+          // 1. Intentar campo role directo
+          if (user.role) {
+            let roleStr = typeof user.role === 'string' ? user.role : String(user.role);
+            // Remover prefijo ROLE_ si existe
+            roleStr = roleStr.startsWith('ROLE_') ? roleStr.substring(5) : roleStr;
+            return roleStr.toUpperCase();
+          }
+          
+          // 2. Intentar campo rol (español)
+          if (user.rol) {
+            let roleStr = typeof user.rol === 'string' ? user.rol : String(user.rol);
+            // Remover prefijo ROLE_ si existe
+            roleStr = roleStr.startsWith('ROLE_') ? roleStr.substring(5) : roleStr;
+            return roleStr.toUpperCase();
+          }
+          
+          // 3. Intentar array roles
+          if (user.roles && Array.isArray(user.roles) && user.roles.length > 0) {
+            let firstRole = user.roles[0];
+            let roleStr = typeof firstRole === 'string' ? firstRole : String(firstRole);
+            // Remover prefijo ROLE_ si existe
+            roleStr = roleStr.startsWith('ROLE_') ? roleStr.substring(5) : roleStr;
+            return roleStr.toUpperCase();
+          }
+          
+          // 4. Intentar authorities (Spring Security)
+          if (user.authorities && Array.isArray(user.authorities) && user.authorities.length > 0) {
+            const authority = user.authorities.find(a => a.authority || a.role);
+            if (authority) {
+              let roleStr = authority.authority || authority.role;
+              if (typeof roleStr === 'string') {
+                // Remover prefijo ROLE_ si existe
+                roleStr = roleStr.startsWith('ROLE_') ? roleStr.substring(5) : roleStr;
+                return roleStr.toUpperCase();
+              }
+            }
+          }
+          
+          // 5. Por defecto USER
+          console.warn(`⚠️ Usuario "${user.username}" no tiene rol detectable. Asignando USER por defecto.`);
+          return 'USER';
+        };
+        
+        const finalRole = extractRole(user);
+        console.log(`  → Rol final asignado: "${finalRole}"`);
+        
+        return {
+          ...user,
+          role: finalRole
+        };
+      });
+
+      console.log('Usuarios normalizados (final):', normalizedUsers);
+      setUsers(normalizedUsers);
     } catch (error) {
+      console.error('Error al cargar usuarios:', error);
       setUsers([]);
       toast.current.show({
         severity: 'error',
@@ -71,7 +154,8 @@ const UsersManagementPage = () => {
     setFilters({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
       username: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      email: { value: null, matchMode: FilterMatchMode.CONTAINS }
+      email: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      role: { value: null, matchMode: FilterMatchMode.EQUALS }
     });
     setGlobalFilterValue('');
   };
@@ -89,8 +173,7 @@ const UsersManagementPage = () => {
   };
 
   const openNewDialog = () => {
-    setFormData({ username: '', password: '', email: '', fullName: '' });
-    setFormErrors({});
+    setFormData({ username: '', password: '', email: '', fullName: '', role: 'USER' });
     setEditMode(false);
     setShowDialog(true);
   };
@@ -137,16 +220,41 @@ const UsersManagementPage = () => {
           life: 3000
         });
       } else {
-        await authAPI.registerAdmin(formData);
-        toast.current.show({
-          severity: 'success',
-          summary: 'Usuario creado',
-          detail: 'El administrador ha sido registrado correctamente.',
-          life: 3000
-        });
+        // Crear nuevo usuario según el rol seleccionado
+        const userData = {
+          username: formData.username,
+          password: formData.password,
+          email: formData.email,
+          fullName: formData.fullName
+        };
+        
+        if (formData.role === 'ADMIN') {
+          await authAPI.registerAdmin(userData);
+          toast.current.show({
+            severity: 'success',
+            summary: 'Administrador creado',
+            detail: 'El administrador ha sido registrado correctamente.',
+            life: 3000
+          });
+        } else {
+          await authAPI.register(userData);
+          toast.current.show({
+            severity: 'success',
+            summary: 'Usuario creado',
+            detail: 'El usuario ha sido registrado correctamente.',
+            life: 3000
+          });
+        }
       }
+      
+      // Cerrar el dialog
       setShowDialog(false);
-      loadUsers();
+      
+      // Limpiar filtros para mostrar todos los usuarios
+      initFilters();
+      
+      // Recargar la lista de usuarios (esperar a que termine)
+      await loadUsers();
     } catch (error) {
       toast.current.show({
         severity: 'error',
@@ -178,7 +286,10 @@ const UsersManagementPage = () => {
         detail: 'El usuario ha sido eliminado correctamente.',
         life: 3000
       });
-      loadUsers();
+      // Limpiar filtros para mostrar todos los usuarios
+      initFilters();
+      // Esperar a que se recargue la lista
+      await loadUsers();
     } catch (error) {
       toast.current.show({
         severity: 'error',
@@ -198,7 +309,10 @@ const UsersManagementPage = () => {
         detail: `Usuario ${!usuario.habilitado ? 'activado' : 'desactivado'} correctamente.`,
         life: 3000
       });
-      loadUsers();
+      // Limpiar filtros para mostrar todos los usuarios
+      initFilters();
+      // Esperar a que se recargue la lista
+      await loadUsers();
     } catch (error) {
       toast.current.show({
         severity: 'error',
@@ -210,8 +324,53 @@ const UsersManagementPage = () => {
   };
 
   const roleTemplate = (rowData) => {
-    const severity = rowData.role === 'ADMIN' ? 'danger' : 'info';
-    return <Tag value={rowData.role} severity={severity} />;
+    // El rol ya viene normalizado desde loadUsers
+    const role = rowData.role || 'USER';
+    
+    if (role === 'ADMIN') {
+      return (
+        <Tag 
+          value="ADMINISTRADOR" 
+          severity="danger" 
+          icon="pi pi-shield"
+          style={{ fontWeight: 'bold' }}
+        />
+      );
+    } else {
+      return (
+        <Tag 
+          value="USUARIO" 
+          severity="info" 
+          icon="pi pi-user"
+        />
+      );
+    }
+  };
+
+  // Template para filtro de rol
+  const roleFilterTemplate = (options) => {
+    return (
+      <Dropdown
+        value={options.value}
+        options={[
+          { label: 'Todos', value: null },
+          { label: 'Administrador', value: 'ADMIN' },
+          { label: 'Usuario', value: 'USER' }
+        ]}
+        onChange={(e) => options.filterCallback(e.value)}
+        placeholder="Filtrar por rol"
+        className="p-column-filter"
+        showClear={false}
+        style={{ minWidth: '10rem' }}
+      />
+    );
+  };
+
+  // Comparador personalizado para ordenar roles (ADMIN primero)
+  const roleComparator = (role1, role2) => {
+    const roleHierarchy = { 'ADMIN': 2, 'USER': 1 };
+    // Los roles ya vienen normalizados desde loadUsers
+    return (roleHierarchy[role2] || 0) - (roleHierarchy[role1] || 0);
   };
 
   const habilitadoTemplate = (rowData) => {
@@ -294,10 +453,22 @@ const UsersManagementPage = () => {
             )}
           </div>
           <div className="table-header-right">
-            <Tag
-              value={`${users.length} usuarios`}
-              severity="info"
-            />
+            <div className="flex gap-2">
+              <Tag
+                icon="pi pi-shield"
+                value={`${users.filter(u => u.role === 'ADMIN').length} Admin`}
+                severity="danger"
+              />
+              <Tag
+                icon="pi pi-user"
+                value={`${users.filter(u => u.role === 'USER').length} User`}
+                severity="info"
+              />
+              <Tag
+                value={`${users.length} Total`}
+                severity="success"
+              />
+            </div>
           </div>
         </div>
 
@@ -309,17 +480,34 @@ const UsersManagementPage = () => {
           rows={10}
           rowsPerPageOptions={[5, 10, 25]}
           emptyMessage="No hay usuarios registrados"
-          responsiveLayout="scroll"
           size="small"
           filters={filters}
           globalFilterFields={['username', 'fullName', 'email', 'role']}
           filterDisplay="row"
           stripedRows
+          sortField="role"
+          sortOrder={-1}
         >
           <Column field="username" header="Usuario" sortable filter filterPlaceholder="Buscar" style={{ width: '180px' }} />
           <Column field="fullName" header="Nombre Completo" sortable filter filterPlaceholder="Buscar" />
           <Column field="email" header="Email" sortable filter filterPlaceholder="Buscar" style={{ width: '250px' }} />
-          <Column field="role" header="Rol" body={roleTemplate} sortable style={{ width: '120px' }} />
+          <Column 
+            field="role" 
+            header="Rol" 
+            body={roleTemplate} 
+            sortable 
+            filter
+            filterElement={roleFilterTemplate}
+            showFilterMatchModes={false}
+            sortFunction={(e) => {
+              const data = [...e.data];
+              return data.sort((a, b) => {
+                // Los roles ya están normalizados en mayúsculas
+                return e.order * roleComparator(a.role || 'USER', b.role || 'USER');
+              });
+            }}
+            style={{ width: '170px' }} 
+          />
           <Column field="habilitado" header="Estado" body={habilitadoTemplate} sortable style={{ width: '120px' }} />
           <Column body={actionsTemplate} exportable={false} style={{ width: '120px' }} frozen alignFrozen="right" />
         </DataTable>
@@ -329,10 +517,7 @@ const UsersManagementPage = () => {
         header={editMode ? 'Editar Usuario' : 'Nuevo Usuario'}
         visible={showDialog}
         style={{ width: '650px', maxHeight: '90vh' }}
-        onHide={() => {
-          setShowDialog(false);
-          setFormErrors({});
-        }}
+        onHide={() => setShowDialog(false)}
         modal
       >
         <div className="dialog-form">
@@ -371,17 +556,35 @@ const UsersManagementPage = () => {
             </div>
 
             {!editMode && (
-              <div className="field col-12">
-                <label htmlFor="password">Contraseña *</label>
-                <Password
-                  id="password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  feedback
-                  toggleMask
-                  placeholder="Mínimo 8 caracteres"
-                />
-              </div>
+              <>
+                <div className="field col-12">
+                  <label htmlFor="role">Rol *</label>
+                  <Dropdown
+                    id="role"
+                    value={formData.role}
+                    options={roleOptions}
+                    onChange={(e) => setFormData({ ...formData, role: e.value })}
+                    placeholder="Seleccionar rol"
+                  />
+                  <small className="text-muted">
+                    {formData.role === 'ADMIN' 
+                      ? 'Los administradores tienen acceso completo al sistema'
+                      : 'Los usuarios tienen acceso limitado al sistema'}
+                  </small>
+                </div>
+
+                <div className="field col-12">
+                  <label htmlFor="password">Contraseña *</label>
+                  <Password
+                    id="password"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    feedback
+                    toggleMask
+                    placeholder="Mínimo 8 caracteres"
+                  />
+                </div>
+              </>
             )}
           </div>
 

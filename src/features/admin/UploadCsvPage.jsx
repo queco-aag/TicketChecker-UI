@@ -46,28 +46,63 @@ const UploadCsvPage = () => {
   };
 
   return (
-    <Card title="Carga masiva de premios" subTitle="Endpoint: POST /premios/cargar-csv">
+    <div className="table-page">
       <Toast ref={toast} />
-
-      <div className="claim-form">
-        <label>
-          Archivo CSV
-          <input
-            type="file"
-            accept=".csv,text/csv"
-            onChange={(event) => setFile(event.target.files?.[0] || null)}
-          />
-        </label>
-
-        <Button
-          label="Subir archivo"
-          icon="pi pi-upload"
-          onClick={upload}
-          disabled={!file}
-          loading={loading}
-        />
+      
+      <div className="page-header">
+        <div>
+          <h2>Carga Masiva de Premios</h2>
+          <p>Importa premios desde un archivo CSV</p>
+        </div>
       </div>
-    </Card>
+
+      <Card>
+        <div className="p-fluid">
+          <div className="field">
+            <label htmlFor="csvFile">Archivo CSV</label>
+            <input
+              id="csvFile"
+              type="file"
+              accept=".csv,text/csv"
+              onChange={(event) => setFile(event.target.files?.[0] || null)}
+              className="p-inputtext"
+            />
+            <small className="text-muted">
+              Selecciona un archivo CSV con el formato especificado
+            </small>
+          </div>
+
+          <div className="field">
+            <label>Formato del CSV:</label>
+            <pre style={{ 
+              background: '#f5f5f5', 
+              padding: '1rem', 
+              borderRadius: '4px',
+              fontSize: '0.9rem',
+              overflow: 'auto'
+            }}>
+numero,nombrePremio,descripcionPremio,urlFotoPremio,anio
+18422,PlayStation 5,Consola de videojuegos,https://...,2026
+32109,Xbox Series X,Consola Microsoft,https://...,2026
+            </pre>
+            <small className="text-muted">
+              <strong>Importante:</strong> El campo <code>anio</code> es obligatorio y debe corresponder a un año con clave registrada.
+            </small>
+          </div>
+
+          <div className="field">
+            <Button
+              label="Cargar Premios"
+              icon="pi pi-upload"
+              onClick={upload}
+              disabled={!file}
+              loading={loading}
+              className="p-button-success"
+            />
+          </div>
+        </div>
+      </Card>
+    </div>
   );
 };
 

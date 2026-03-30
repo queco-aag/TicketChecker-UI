@@ -37,6 +37,7 @@ Verifica si un número tiene premio asignado.
     "nombre": "PlayStation 5",
     "descripcion": "Consola de videojuegos de última generación",
     "urlFoto": "https://example.com/ps5.jpg",
+    "anio": 2026,
     "enviado": false
   },
   "reclamado": false
@@ -129,10 +130,12 @@ Carga masiva de premios desde un archivo CSV.
 
 **Formato del CSV:**
 ```csv
-numero,nombrePremio,descripcionPremio,urlFotoPremio
-12345,PlayStation 5,Consola de videojuegos,https://example.com/ps5.jpg
-67890,Xbox Series X,Consola de última generación,https://example.com/xbox.jpg
+numero,nombrePremio,descripcionPremio,urlFotoPremio,anio
+12345,PlayStation 5,Consola de videojuegos,https://example.com/ps5.jpg,2026
+67890,Xbox Series X,Consola de última generación,https://example.com/xbox.jpg,2026
 ```
+
+> **Nota:** El campo `anio` es obligatorio. Debe existir una clave registrada para ese año.
 
 **Respuesta exitosa (200):**
 ```json
@@ -386,6 +389,7 @@ Permite a un administrador crear nuevos administradores.
   nombre: string;
   descripcion: string;
   urlFoto: string;
+  anio: number;           // Año del sorteo al que pertenece
   enviado: boolean;
 }
 ```

@@ -211,8 +211,19 @@ const NumberPrizeMatchingPage = () => {
     return (
       <div>
         <div>{rowData.premio.nombre}</div>
-        {rowData.premio.categoria && (
-          <small className="text-muted">{rowData.premio.categoria}</small>
+        {rowData.premio.anio && (
+          <small className="text-muted">Año: {rowData.premio.anio}</small>
+        )}
+      </div>
+    );
+  };
+
+  const premioOptionTemplate = (option) => {
+    return (
+      <div>
+        <div>{option.nombre}</div>
+        {option.anio && (
+          <small className="text-muted">Año: {option.anio}</small>
         )}
       </div>
     );
@@ -419,6 +430,7 @@ const NumberPrizeMatchingPage = () => {
               }}
               optionLabel="nombre"
               optionValue="id"
+              itemTemplate={premioOptionTemplate}
               placeholder="Selecciona un premio"
               filter
               showClear

@@ -7,6 +7,43 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### 📚 Documentación
+
+#### Actualización OpenAPI: Endpoints CRUD de Premios (2026-03-30)
+- **Agregado:** Documentación completa de 5 endpoints CRUD de premios faltantes en `openapi.yaml`
+  - `GET /api/v1/premios` - Listar todos los premios
+  - `POST /api/v1/premios` - Crear premio individual (JSON, no requiere archivo)
+  - `GET /api/v1/premios/{id}` - Obtener premio por ID
+  - `PUT /api/v1/premios/{id}` - Actualizar premio
+  - `DELETE /api/v1/premios/{id}` - Eliminar premio
+- **Agregado:** 3 nuevos schemas: `CrearPremioRequest`, `ActualizarPremioRequest`, `PremioDetallado`
+- **Aclaración:** El endpoint `POST /premios` usa `application/json`, NO `multipart/form-data`
+- **Resultado:** OpenAPI ahora refleja todos los endpoints implementados en el backend
+- Ver: `docs/api/ACTUALIZACION_OPENAPI_PREMIOS.md`
+
+### 🐛 Corregido
+
+#### Corrección Crítica: Token no se guardaba después del Login (2026-03-30)
+- **Problema:** El token JWT no se almacenaba en localStorage después del login, causando errores 403 en todas las peticiones autenticadas
+- **Causa 1:** Las peticiones se hacían directamente a `localhost:8080` ignorando el proxy de Vite
+- **Causa 2:** La estructura de la respuesta del backend no se manejaba correctamente
+- **Solución 1:** Forzar uso del proxy con URL relativa `/api/v1` en lugar de URL absoluta
+- **Solución 2:** Mejorar el manejo de respuestas del login con validación y logs de debugging
+- **Resultado:** Login funcional, token se guarda correctamente, autenticación JWT operativa
+- Ver: `SOLUCION_TOKEN_LOGIN.md`
+
+### ✨ Agregado
+
+#### Premios Asociados a Año de Sorteo (2026-03-27)
+- **Campo nuevo:** Premios ahora incluyen campo `anio` (año del sorteo)
+- **PrizesManagementPage:** Dropdown de selección de año basado en claves registradas
+- **NumberPrizeMatchingPage:** Template actualizado para mostrar año del premio
+- **Validación:** El año es obligatorio al crear un premio
+- **UI:** Nueva columna "Año" en tabla de premios
+- Campo año inmutable al editar (no se puede cambiar)
+- Integración con sistema de claves anuales
+- Ver: `docs/operacion/ACTUALIZACION_PREMIOS_POR_AÑO.md`
+
 ### 🐛 Corregido
 
 #### Corrección de Endpoints de API (2026-03-22)

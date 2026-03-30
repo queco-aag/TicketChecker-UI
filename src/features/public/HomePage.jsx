@@ -73,17 +73,53 @@ const HomePage = () => {
 
     setLoginLoading(true);
     try {
-      const { data } = await authAPI.login({ username: username.trim(), password });
-      saveSession(data.token, {
-        username: data.username,
-        email: data.email,
-        fullName: data.fullName
-      });
+      const response = await authAPI.login({ username: username.trim(), password });
+      
+      // ===== DEBUG: Ver qué devuelve el backend =====
+      console.log('========== DEBUG LOGIN ==========');
+      console.log('Respuesta completa:', response);
+      console.log('response.data:', response.data);
+      console.log('Campos en response.data:', Object.keys(response.data || {}));
+      console.log('=================================');
+      
+      // Manejar diferentes estructuras de respuesta
+      const data = response.data;
+      
+      // Intentar extraer el token de diferentes ubicaciones
+      const token = data.token || data?.data?.token;
+      const userData = {
+        username: data.username || data?.data?.username || username.trim(),
+        email: data.email || data?.data?.email,
+        fullName: data.fullName || data?.data?.fullName
+      };
+      
+      console.log('Token extraído:', token);
+      console.log('User data extraído:', userData);
+      
+      if (!token) {
+        console.error('❌ ERROR: No se pudo extraer el token');
+        console.error('Estructura recibida:', data);
+        toast.current.show({
+          severity: 'error',
+          summary: 'Error de autenticación',
+          detail: 'No se recibió token de autenticación del servidor',
+          life: 4000
+        });
+        return;
+      }
+      
+      // Guardar sesión
+      saveSession(token, userData);
+      
+      // Verificar que se guardó correctamente
+      const savedToken = localStorage.getItem('ticketchecker.admin.token');
+      console.log('✅ Token guardado en localStorage:', savedToken ? 'SÍ' : 'NO');
+      console.log('Longitud del token:', savedToken?.length);
 
       toast.current.show({
         severity: 'success',
         summary: 'Acceso concedido',
-        detail: `Bienvenido, ${data.fullName}`,
+        detail: `Bienvenido, ${userData.fullName || userData.username}`,
         life: 2000
       });
 
@@ -91,6 +127,7 @@ const HomePage = () => {
         navigate('/admin');
       }, 1000);
     } catch (error) {
+      console.error('❌ Error en login:', error);
       toast.current.show({
         severity: 'error',
         summary: 'Acceso denegado',

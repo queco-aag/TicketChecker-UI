@@ -6,21 +6,24 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Image } from 'primereact/image';
-import { rewardsAPI } from '../../shared/api/client';
+import { rewardsAPI, clavesAPI } from '../../shared/api/client';
 
 const PrizesManagementPage = () => {
   const toast = useRef(null);
   const [premios, setPremios] = useState([]);
+  const [claves, setClaves] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '',
     descripcion: '',
-    urlFoto: ''
+    urlFoto: '',
+    anio: new Date().getFullYear()
   });
 
   const loadPremios = async () => {
@@ -50,15 +53,42 @@ const PrizesManagementPage = () => {
     }
   };
 
+  const loadClaves = async () => {
+    try {
+      const response = await clavesAPI.listar();
+      
+      // Manejar diferentes estructuras de respuesta
+      let clavesArray = [];
+      if (response.data?.claves && Array.isArray(response.data.claves)) {
+        clavesArray = response.data.claves;
+      } else if (Array.isArray(response.data)) {
+        clavesArray = response.data;
+      }
+      
+      setClaves(clavesArray);
+    } catch (error) {
+      console.error('Error al cargar claves:', error);
+      setClaves([]);
+      toast.current.show({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'No se pudieron cargar los años disponibles. Asegúrese de registrar claves primero.',
+        life: 4000
+      });
+    }
+  };
+
   useEffect(() => {
     loadPremios();
+    loadClaves();
   }, []);
 
   const openNewDialog = () => {
     setFormData({
       nombre: '',
       descripcion: '',
-      urlFoto: ''
+      urlFoto: '',
+      anio: new Date().getFullYear()
     });
     setEditMode(false);
     setShowDialog(true);
@@ -71,11 +101,11 @@ const PrizesManagementPage = () => {
   };
 
   const handleSave = async () => {
-    if (!formData.nombre || !formData.descripcion) {
+    if (!formData.nombre || !formData.descripcion || !formData.anio) {
       toast.current.show({
         severity: 'warn',
         summary: 'Datos incompletos',
-        detail: 'Nombre y descripción son obligatorios.',
+        detail: 'Nombre, descripción y año son obligatorios.',
         life: 3000
       });
       return;
@@ -202,6 +232,7 @@ const PrizesManagementPage = () => {
           size="small"
         >
           <Column field="id" header="ID" sortable style={{ width: '80px' }} />
+          <Column field="anio" header="Año" sortable style={{ width: '100px' }} />
           <Column field="nombre" header="Nombre" sortable />
           <Column field="descripcion" header="Descripción" sortable />
           <Column header="Foto" body={imageTemplate} style={{ width: '120px' }} />
@@ -218,6 +249,23 @@ const PrizesManagementPage = () => {
       >
         <div className="dialog-form">
           <div className="p-fluid grid">
+            <div className="field col-12">
+              <label htmlFor="anio">Año del Sorteo *</label>
+              <Dropdown
+                id="anio"
+                value={formData.anio}
+                onChange={(e) => setFormData({ ...formData, anio: e.value })}
+                options={claves.map(c => ({ label: c.anio.toString(), value: c.anio }))}
+                placeholder="Seleccione el año del sorteo"
+                disabled={editMode}
+                emptyMessage="No hay años registrados. Vaya a Claves por Año para crear uno."
+                showClear={false}
+              />
+              <small className="text-muted">
+                El premio estará asociado a este año de sorteo. {editMode ? 'No se puede cambiar al editar.' : ''}
+              </small>
+            </div>
+
             <div className="field col-12">
               <label htmlFor="nombre">Nombre del Premio *</label>
               <InputText
