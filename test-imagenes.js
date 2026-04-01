@@ -1,5 +1,5 @@
-# Script de verificación de imágenes
-# Ejecuta esto en la consola del navegador (F12 → Console)
+//# Script de verificación de imágenes
+//# Ejecuta esto en la consola del navegador (F12 → Console)
 
 console.log('='.repeat(60));
 console.log('🔍 VERIFICACIÓN DE IMÁGENES - INICIO');
