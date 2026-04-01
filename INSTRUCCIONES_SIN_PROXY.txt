@@ -1,0 +1,275 @@
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                               ┃
+┃    ✅ PROXY ELIMINADO - LLAMADAS DIRECTAS AL BACKEND         ┃
+┃                                                               ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📋 Cambios Aplicados en el Frontend
+
+
+═══════════════════════════════════════════════════════════════
+✅ ARCHIVOS MODIFICADOS
+═══════════════════════════════════════════════════════════════
+
+1. src/shared/api/client.js
+   ANTES: const API_BASE_URL = '/api/v1'
+   AHORA: const API_BASE_URL = 'http://localhost:8080/api/v1'
+
+2. .env
+   ANTES: VITE_API_URL=/api/v1
+   AHORA: VITE_API_URL=http://localhost:8080/api/v1
+
+3. Caché de Vite
+   ✅ Eliminada
+
+
+═══════════════════════════════════════════════════════════════
+🔄 FLUJO DE PETICIONES (AHORA)
+═══════════════════════════════════════════════════════════════
+
+Frontend (localhost:5173)
+    ↓
+    Petición DIRECTA a: http://localhost:8080/api/v1/premios
+    Headers:
+      - Authorization: Bearer {token}
+      - Content-Type: application/json
+    ↓
+Backend (localhost:8080)
+    ↓
+    ⚠️ DEBE VERIFICAR:
+    1. CORS (Origin: http://localhost:5173) ✅
+    2. Token JWT válido ✅
+    3. Rol del usuario (ADMIN) ✅
+    ↓
+    Respuesta con headers CORS
+
+
+═══════════════════════════════════════════════════════════════
+⚠️ REQUISITO CRÍTICO: CORS EN EL BACKEND
+═══════════════════════════════════════════════════════════════
+
+El backend DEBE tener CORS configurado para permitir peticiones desde:
+  • http://localhost:5173  (frontend Vite dev)
+  • http://localhost:3000  (frontend Docker)
+
+📄 Ver instrucciones completas en:
+   CONFIGURACION_CORS_BACKEND.md
+
+
+═══════════════════════════════════════════════════════════════
+🚀 PASOS SIGUIENTES
+═══════════════════════════════════════════════════════════════
+
+PASO 1️⃣ : CONFIGURAR CORS EN EL BACKEND
+─────────────────────────────────────────────────────────────
+
+Ir al proyecto del backend:
+  cd C:\Workspace\Particular\TicketChecker
+
+Opción A - Spring Boot (WebConfig):
+  Crear: src/main/java/com/aspadif/ticketchecker/config/WebConfig.java
+
+  @Configuration
+  public class WebConfig implements WebMvcConfigurer {
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+          registry.addMapping("/api/**")
+                  .allowedOrigins("http://localhost:5173", "http://localhost:3000")
+                  .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                  .allowedHeaders("*")
+                  .allowCredentials(true)
+                  .maxAge(3600);
+      }
+  }
+
+Opción B - Spring Security:
+  Modificar SecurityConfig.java (ver CONFIGURACION_CORS_BACKEND.md)
+
+
+PASO 2️⃣ : REINICIAR EL BACKEND
+─────────────────────────────────────────────────────────────
+
+Después de configurar CORS:
+  1. Detener el backend
+  2. Recompilar si es necesario
+  3. Iniciar el backend de nuevo
+  4. Verificar que arranca sin errores
+
+
+PASO 3️⃣ : REINICIAR EL FRONTEND
+─────────────────────────────────────────────────────────────
+
+En el terminal del frontend:
+
+  # Si está corriendo, detenerlo (Ctrl+C)
+  # Luego reiniciar:
+  npm run dev
+
+
+PASO 4️⃣ : LIMPIAR CACHÉ DEL NAVEGADOR
+─────────────────────────────────────────────────────────────
+
+Opción A - Modo incógnito (RECOMENDADO):
+  Ctrl + Shift + N
+  Ir a: http://localhost:5173
+
+Opción B - Limpiar localStorage:
+  F12 → Console:
+  localStorage.clear();
+  location.reload();
+
+
+PASO 5️⃣ : HACER LOGIN Y PROBAR
+─────────────────────────────────────────────────────────────
+
+1. Abrir F12 (DevTools)
+2. Ir a la pestaña "Console"
+3. Hacer login
+4. Ir a "Gestión de Premios"
+5. Intentar crear un premio
+
+
+═══════════════════════════════════════════════════════════════
+✅ RESULTADO ESPERADO
+═══════════════════════════════════════════════════════════════
+
+EN LA CONSOLA:
+  ========== DEBUG LOGIN ==========
+  Token extraído: eyJ...
+  ✅ Token guardado en localStorage: SÍ
+
+EN NETWORK (F12 → Network → premios):
+  Request URL: http://localhost:8080/api/v1/premios
+  Request Method: POST
+  Status Code: 201 Created (o 200 OK)
+
+  Response Headers:
+    ✅ Access-Control-Allow-Origin: http://localhost:5173
+    ✅ Access-Control-Allow-Methods: GET, POST, PUT, DELETE, ...
+    ✅ Access-Control-Allow-Credentials: true
+
+SIN ERRORES:
+  ❌ NO debe aparecer: "blocked by CORS policy"
+  ❌ NO debe aparecer: "403 Forbidden"
+  ✅ El premio se crea correctamente
+
+
+═══════════════════════════════════════════════════════════════
+🔍 VERIFICAR QUE CORS FUNCIONA
+═══════════════════════════════════════════════════════════════
+
+Desde PowerShell, probar el endpoint OPTIONS (preflight):
+
+  curl -X OPTIONS http://localhost:8080/api/v1/premios `
+    -H "Origin: http://localhost:5173" `
+    -H "Access-Control-Request-Method: POST" `
+    -v
+
+DEBE RESPONDER CON:
+  Access-Control-Allow-Origin: http://localhost:5173
+  Access-Control-Allow-Methods: GET, POST, PUT, DELETE, ...
+
+
+═══════════════════════════════════════════════════════════════
+❌ SI SIGUE DANDO 403 (Forbidden)
+═══════════════════════════════════════════════════════════════
+
+Posibles causas:
+
+1. CORS no está configurado en el backend
+   → Ver CONFIGURACION_CORS_BACKEND.md
+
+2. El endpoint POST /premios no existe en el backend
+   → Verificar que esté implementado
+
+3. El usuario no tiene rol ADMIN
+   → Verificar en los logs del backend:
+     • Token válido: true/false
+     • Usuario extraído del token
+     • Roles del usuario
+
+4. El token JWT no es válido
+   → Verificar clave secreta del JWT en backend y frontend
+
+5. Spring Security está bloqueando la petición
+   → Verificar configuración de Security
+   → Asegurarse de que /api/v1/premios permite ROLE_ADMIN
+
+
+═══════════════════════════════════════════════════════════════
+🆘 LOGS DEL BACKEND
+═══════════════════════════════════════════════════════════════
+
+Cuando hagas la petición, el backend debería mostrar:
+
+  [INFO] Request: POST /api/v1/premios
+  [INFO] Origin: http://localhost:5173
+  [DEBUG] Authorization: Bearer eyJ...
+  [DEBUG] Token válido: true
+  [DEBUG] Usuario: admin
+  [DEBUG] Roles: [ROLE_ADMIN]
+  [INFO] Response: 201 Created
+
+Si muestra algo diferente, comparte los logs aquí.
+
+
+═══════════════════════════════════════════════════════════════
+📄 DOCUMENTOS CREADOS
+═══════════════════════════════════════════════════════════════
+
+1. CONFIGURACION_CORS_BACKEND.md
+   → Guía completa para configurar CORS en el backend
+   → Opciones para Spring Boot, Spring Security, etc.
+   → Verificación y troubleshooting
+
+2. INSTRUCCIONES_SIN_PROXY.txt (este archivo)
+   → Pasos rápidos para configurar y probar
+
+
+═══════════════════════════════════════════════════════════════
+📊 RESUMEN DE CAMBIOS
+═══════════════════════════════════════════════════════════════
+
+Configuración anterior (CON PROXY):
+  ✅ No requería CORS en el backend
+  ✅ Peticiones: localhost:5173/api/v1/...
+  ✅ Proxy redirigía a: localhost:8080/api/v1/...
+  ❌ Pero causaba error 403 (posiblemente por interferencia)
+
+Configuración actual (SIN PROXY):
+  ✅ Peticiones directas: localhost:8080/api/v1/...
+  ✅ Más simple y directo
+  ⚠️ REQUIERE: CORS configurado en el backend
+  ✅ Debería eliminar el error 403 si CORS está bien configurado
+
+
+═══════════════════════════════════════════════════════════════
+🎯 CHECKLIST
+═══════════════════════════════════════════════════════════════
+
+Backend:
+  [ ] CORS configurado (WebConfig o SecurityConfig)
+  [ ] Backend reiniciado
+  [ ] Endpoint POST /api/v1/premios implementado
+  [ ] Logs habilitados para ver peticiones
+
+Frontend:
+  [ ] Servidor reiniciado (npm run dev)
+  [ ] Caché del navegador limpiada
+  [ ] LocalStorage limpiado
+
+Prueba:
+  [ ] Login exitoso
+  [ ] Token guardado en localStorage
+  [ ] Crear premio sin error 403
+  [ ] No hay errores CORS en la consola
+  [ ] Response Headers incluyen Access-Control-Allow-Origin
+
+
+═══════════════════════════════════════════════════════════════
+
+Actualizado: 30 de Marzo, 2026
+Estado: ⚠️ Requiere configurar CORS en el backend
+
+═══════════════════════════════════════════════════════════════
+

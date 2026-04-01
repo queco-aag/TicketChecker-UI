@@ -7,6 +7,30 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### 🐛 Corregido
+
+#### Corrección CRÍTICA: API Premios Requiere multipart/form-data (2026-03-30)
+- **Problema:** Error 403/415 al crear/actualizar premios - Backend esperaba multipart/form-data pero recibía JSON
+- **Causa raíz:** Descubierta por el usuario - El `PremioController.java` tiene `@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)`
+- **Solución:** Modificado `client.js` para enviar FormData en lugar de JSON
+- **Funciones afectadas:**
+  - `crearPremio()` - Ahora construye FormData con los campos anio, nombre, descripcion, imagen
+  - `actualizarPremio()` - Ahora construye FormData con los campos opcionales
+- **Resultado:** Premios se pueden crear y actualizar correctamente (201 Created)
+- Ver: `docs/operacion/SOLUCION_MULTIPART_FORMDATA.md`
+
+### ⚡ Cambiado
+
+#### Eliminación del Proxy de Vite - Llamadas Directas al Backend (2026-03-30)
+- **Cambio:** Eliminado el proxy de Vite, ahora se hacen llamadas directas al backend
+- **Razón:** El proxy estaba causando errores 403 Forbidden
+- **Archivos modificados:**
+  - `src/shared/api/client.js` - URL absoluta `http://localhost:8080/api/v1`
+  - `.env` - `VITE_API_URL=http://localhost:8080/api/v1`
+- **Requisito CRÍTICO:** El backend DEBE tener CORS configurado para `http://localhost:5173`
+- **Beneficio:** Comunicación más directa y transparente con el backend
+- Ver: `CONFIGURACION_CORS_BACKEND.md` y `INSTRUCCIONES_SIN_PROXY.txt`
+
 ### 📚 Documentación
 
 #### Actualización OpenAPI: Endpoints CRUD de Premios (2026-03-30)

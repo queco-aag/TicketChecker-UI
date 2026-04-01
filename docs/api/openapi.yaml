@@ -601,6 +601,7 @@ paths:
         🔒 Requiere rol ADMIN - Crea un premio individual
         
         Crea un nuevo premio en el sistema proporcionando los detalles del mismo.
+        Soporta la carga de una imagen opcional.
         
         **Nota:** Para carga masiva de premios, usar `/premios/cargar-csv`
       operationId: crearPremio
@@ -609,14 +610,29 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CrearPremioRequest'
-            example:
-              nombre: "PlayStation 5"
-              descripcion: "Consola de videojuegos de última generación"
-              urlFoto: "https://example.com/ps5.jpg"
-              anio: 2026
+              type: object
+              required:
+                - anio
+                - nombre
+              properties:
+                anio:
+                  type: integer
+                  description: Año del sorteo al que pertenece el premio
+                  example: 2026
+                nombre:
+                  type: string
+                  description: Nombre del premio
+                  example: "PlayStation 5"
+                descripcion:
+                  type: string
+                  description: Descripción detallada del premio (opcional)
+                  example: "Consola de videojuegos de última generación"
+                imagen:
+                  type: string
+                  format: binary
+                  description: Archivo de imagen del premio (opcional, JPG/PNG/GIF/WEBP, máx 5MB)
       responses:
         '201':
           description: Premio creado exitosamente
@@ -755,7 +771,8 @@ paths:
       description: |
         🔒 Requiere rol ADMIN - Actualiza los datos de un premio
         
-        Solo se actualizan los campos que se incluyan en el cuerpo de la petición.
+        Solo se actualizan los campos que se incluyan en la petición.
+        Soporta la carga de una nueva imagen.
       operationId: actualizarPremio
       security:
         - bearerAuth: []
@@ -771,13 +788,22 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ActualizarPremioRequest'
-            example:
-              nombre: "PlayStation 5 Pro"
-              descripcion: "Versión mejorada de la consola"
-              urlFoto: "https://example.com/ps5-pro.jpg"
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: Nuevo nombre del premio (opcional)
+                  example: "PlayStation 5 Pro"
+                descripcion:
+                  type: string
+                  description: Nueva descripción del premio (opcional)
+                  example: "Versión mejorada de la consola"
+                imagen:
+                  type: string
+                  format: binary
+                  description: Nueva imagen del premio (opcional, JPG/PNG/GIF/WEBP, máx 5MB)
       responses:
         '200':
           description: Premio actualizado exitosamente

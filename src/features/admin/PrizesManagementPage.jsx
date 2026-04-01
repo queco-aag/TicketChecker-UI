@@ -11,6 +11,7 @@ import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Image } from 'primereact/image';
 import { rewardsAPI, clavesAPI } from '../../shared/api/client';
+import { getImageUrl } from '../../shared/utils/imageUtils';
 
 const PrizesManagementPage = () => {
   const toast = useRef(null);
@@ -22,9 +23,11 @@ const PrizesManagementPage = () => {
   const [formData, setFormData] = useState({
     nombre: '',
     descripcion: '',
-    urlFoto: '',
-    anio: new Date().getFullYear()
+    rutaFoto: '',
+    anio: new Date().getFullYear(),
+    imagen: null // Archivo de imagen a subir
   });
+  const [previewUrl, setPreviewUrl] = useState(null); // Vista previa de la imagen seleccionada
 
   const loadPremios = async () => {
     setLoading(true);
@@ -38,6 +41,7 @@ const PrizesManagementPage = () => {
       } else if (Array.isArray(response.data)) {
         premiosArray = response.data;
       }
+
 
       setPremios(premiosArray);
     } catch (error) {
@@ -87,17 +91,73 @@ const PrizesManagementPage = () => {
     setFormData({
       nombre: '',
       descripcion: '',
-      urlFoto: '',
-      anio: new Date().getFullYear()
+      rutaFoto: '',
+      anio: new Date().getFullYear(),
+      imagen: null
     });
+    setPreviewUrl(null);
     setEditMode(false);
     setShowDialog(true);
   };
 
   const openEditDialog = (premio) => {
-    setFormData({ ...premio });
+    setFormData({ ...premio, imagen: null });
+    // Construir la URL completa de la imagen si existe
+    const imageUrl = getImageUrl(premio.rutaFoto);
+    setPreviewUrl(imageUrl);
     setEditMode(true);
     setShowDialog(true);
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validar tipo de archivo
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      toast.current.show({
+        severity: 'warn',
+        summary: 'Formato no válido',
+        detail: 'Solo se permiten imágenes JPG, PNG, GIF o WEBP.',
+        life: 3000
+      });
+      e.target.value = '';
+      return;
+    }
+
+    // Validar tamaño (5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB en bytes
+    if (file.size > maxSize) {
+      toast.current.show({
+        severity: 'warn',
+        summary: 'Archivo muy grande',
+        detail: 'El tamaño máximo permitido es 5MB.',
+        life: 3000
+      });
+      e.target.value = '';
+      return;
+    }
+
+    // Crear vista previa
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
+
+    // Guardar el archivo en el estado
+    setFormData({ ...formData, imagen: file });
+  };
+
+  const handleRemoveImage = () => {
+    setFormData({ ...formData, imagen: null, rutaFoto: '' });
+    setPreviewUrl(null);
+    // Limpiar el input file
+    const fileInput = document.getElementById('imagen');
+    if (fileInput) {
+      fileInput.value = '';
+    }
   };
 
   const handleSave = async () => {
@@ -174,10 +234,27 @@ const PrizesManagementPage = () => {
   };
 
   const imageTemplate = (rowData) => {
-    return rowData.urlFoto ? (
-      <Image src={rowData.urlFoto} alt={rowData.nombre} width="80" preview />
+    const imageUrl = getImageUrl(rowData.rutaFoto);
+
+
+    return imageUrl ? (
+      <div className="flex align-items-center justify-content-center">
+        <Image
+          src={imageUrl}
+          alt={rowData.nombre}
+          width="100"
+          height="100"
+          preview
+          imageStyle={{ objectFit: 'cover', borderRadius: '4px' }}
+        />
+      </div>
     ) : (
-      <span className="text-muted">Sin imagen</span>
+      <div className="flex align-items-center justify-content-center" style={{ height: '100px' }}>
+        <span className="text-muted text-sm">
+          <i className="pi pi-image mr-2"></i>
+          Sin imagen
+        </span>
+      </div>
     );
   };
 
@@ -235,7 +312,7 @@ const PrizesManagementPage = () => {
           <Column field="anio" header="Año" sortable style={{ width: '100px' }} />
           <Column field="nombre" header="Nombre" sortable />
           <Column field="descripcion" header="Descripción" sortable />
-          <Column header="Foto" body={imageTemplate} style={{ width: '120px' }} />
+          <Column header="Imagen" body={imageTemplate} style={{ width: '150px' }} />
           <Column body={actionsTemplate} style={{ width: '120px' }} />
         </DataTable>
       </Card>
@@ -288,18 +365,58 @@ const PrizesManagementPage = () => {
             </div>
 
             <div className="field col-12">
-              <label htmlFor="urlFoto">URL de la Foto</label>
-              <InputText
-                id="urlFoto"
-                value={formData.urlFoto}
-                onChange={(e) => setFormData({ ...formData, urlFoto: e.target.value })}
-                placeholder="https://ejemplo.com/imagen.jpg"
-              />
-              {formData.urlFoto && (
-                <div className="mt-3 text-center">
-                  <Image src={formData.urlFoto} alt="Vista previa" width="200" preview />
+              <label htmlFor="imagen">Imagen del Premio</label>
+              
+              {/* Vista previa de la imagen existente o nueva */}
+              {previewUrl && (
+                <div className="mb-3 p-3 border-1 surface-border border-round" style={{ backgroundColor: '#f8f9fa' }}>
+                  <div className="flex justify-content-between align-items-center mb-2">
+                    <span className="text-sm font-semibold">Vista previa:</span>
+                    <Button
+                      icon="pi pi-times"
+                      rounded
+                      outlined
+                      severity="danger"
+                      size="small"
+                      onClick={handleRemoveImage}
+                      tooltip="Quitar imagen"
+                      tooltipOptions={{ position: 'top' }}
+                    />
+                  </div>
+                  <div className="text-center">
+                    <Image src={previewUrl} alt="Vista previa" width="250" preview />
+                    {formData.imagen && (
+                      <div className="mt-2">
+                        <small className="text-muted">
+                          📎 {formData.imagen.name} ({(formData.imagen.size / 1024).toFixed(2)} KB)
+                        </small>
+                      </div>
+                    )}
+                    {!formData.imagen && formData.rutaFoto && (
+                      <div className="mt-2">
+                        <small className="text-muted">
+                          🖼️ Imagen actual del premio
+                        </small>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
+
+              {/* Input de archivo */}
+              <div className="flex align-items-center gap-2">
+                <input
+                  id="imagen"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="flex-1"
+                  style={{ padding: '0.5rem' }}
+                />
+              </div>
+              <small className="text-muted block mt-1">
+                Formatos aceptados: JPG, PNG, GIF, WEBP. Tamaño máximo: 5MB
+              </small>
             </div>
           </div>
 

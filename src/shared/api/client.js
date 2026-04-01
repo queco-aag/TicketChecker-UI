@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { getToken, removeSession } from '../auth/authStorage';
 
-// Forzar uso del proxy en desarrollo (evitar CORS)
-const API_BASE_URL = '/api/v1';
+// Llamar directamente al backend (requiere CORS habilitado en el backend)
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1';
 const API_TIMEOUT = Number(import.meta.env.VITE_API_TIMEOUT) || 30000;
 
 const api = axios.create({
@@ -63,8 +63,42 @@ export const rewardsAPI = {
   // CRUD de premios
   listarPremios: () => api.get('/premios', { requiresAuth: true }),
   obtenerPremio: (id) => api.get(`/premios/${id}`, { requiresAuth: true }),
-  crearPremio: (premio) => api.post('/premios', premio, { requiresAuth: true }),
-  actualizarPremio: (id, premio) => api.put(`/premios/${id}`, premio, { requiresAuth: true }),
+  
+  // POST /premios - REQUIERE multipart/form-data
+  crearPremio: (premio) => {
+    const formData = new FormData();
+    formData.append('anio', premio.anio);
+    formData.append('nombre', premio.nombre);
+    if (premio.descripcion) {
+      formData.append('descripcion', premio.descripcion);
+    }
+    if (premio.imagen) {
+      formData.append('imagen', premio.imagen);
+    }
+    return api.post('/premios', formData, {
+      requiresAuth: true,
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+  },
+  
+  // PUT /premios/{id} - REQUIERE multipart/form-data
+  actualizarPremio: (id, premio) => {
+    const formData = new FormData();
+    if (premio.nombre) {
+      formData.append('nombre', premio.nombre);
+    }
+    if (premio.descripcion) {
+      formData.append('descripcion', premio.descripcion);
+    }
+    if (premio.imagen) {
+      formData.append('imagen', premio.imagen);
+    }
+    return api.put(`/premios/${id}`, formData, {
+      requiresAuth: true,
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+  },
+  
   eliminarPremio: (id) => api.delete(`/premios/${id}`, { requiresAuth: true }),
   obtenerDisponibles: () => api.get('/premios', { requiresAuth: true })
 };
