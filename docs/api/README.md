@@ -17,27 +17,17 @@ Este archivo contiene la especificación completa del contrato de API en formato
 
 ### Categorías de endpoints
 
-1. **Autenticación** (`/auth/*`)
-   - Registro de usuarios
-   - Login
-   - Gestión de administradores
-
-2. **Números** (`/numeros/*`)
-   - Verificación de números premiados
-   - Reclamación de premios
-
-3. **Premios** (`/premios/*`)
-   - Carga masiva CSV
-   - Listados (reclamados, pendientes, enviados)
-   - Actualización de estado
+1. **Autenticación** (`/auth/*`) — Login, registro, gestión de administradores
+2. **Números** (`/numeros/*`) — Verificación y reclamación de premios
+3. **Premios** (`/premios/*`) — CRUD, carga masiva CSV, listados por estado
+4. **Usuarios** (`/usuarios/*`) — CRUD y toggle habilitado
+5. **Emparejamientos** (`/numeros-premiados/*`) — Asignación número-premio
+6. **Claves de sorteo** (`/claves/*`) — CRUD, generación de códigos HMAC, exportación CSV
 
 ## 📖 Documentación adicional
 
-- [`REFERENCIA_ENDPOINTS.md`](./REFERENCIA_ENDPOINTS.md) - **⭐ Referencia rápida de endpoints correctos**
-- [`API_CONTRATO_OPENAPI.md`](./API_CONTRATO_OPENAPI.md) - Resumen del contrato implementado
-- [`API_ENDPOINTS.md`](./API_ENDPOINTS.md) - Referencia completa de endpoints con ejemplos
-- [`API_INTEGRATION.md`](./API_INTEGRATION.md) - Guía de integración
-- [`API_INTEGRATION_GUIDE.md`](./API_INTEGRATION_GUIDE.md) - Guía detallada de integración
+- [`REFERENCIA_ENDPOINTS.md`](./REFERENCIA_ENDPOINTS.md) - **⭐ Referencia rápida de endpoints**
+- [`API_ENDPOINTS.md`](./API_ENDPOINTS.md) - Referencia completa con ejemplos, interceptores y guía de integración
 
 ## 🔄 Sincronización con backend
 
@@ -46,17 +36,14 @@ Este archivo debe mantenerse sincronizado con el contrato del backend:
 **Fuente:** `TicketChecker/src/main/resources/openapi.yaml`
 
 Si el backend actualiza su especificación, actualizar también esta copia para mantener la documentación consistente.
+Ver [`../operacion/GUIA_SINCRONIZACION_OPENAPI.md`](../operacion/GUIA_SINCRONIZACION_OPENAPI.md) para instrucciones detalladas.
 
 ## 🛠️ Herramientas recomendadas
 
-Para visualizar y trabajar con el archivo OpenAPI:
-
 - **Swagger Editor:** https://editor.swagger.io/
-- **Swagger UI:** Para generar documentación interactiva
 - **Postman:** Para importar y probar la API
 - **VS Code OpenAPI Extension:** Para validación en el editor
 
 ## 📝 Uso
 
 El frontend usa esta especificación como contrato de referencia. Los servicios implementados en `src/shared/api/client.js` siguen este contrato.
-
