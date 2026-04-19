@@ -40,6 +40,62 @@ npm run preview
 
 Tambien disponibles scripts PowerShell en `project-resources/scripts/`.
 
+### Scripts Docker operativos
+
+#### Windows PowerShell / CMD
+
+```powershell
+# Compilar imagen
+.\scripts\docker-build.ps1
+
+# Compilar e iniciar
+.\scripts\build-and-run.ps1
+
+# Solo iniciar (si ya compiló)
+.\scripts\docker-up.ps1
+
+# Detener
+.\scripts\docker-down.ps1
+```
+
+```cmd
+:: Windows CMD (equivalentes)
+scripts\docker-build.bat
+scripts\build-and-run.bat
+scripts\docker-up.bat
+scripts\docker-down.bat
+```
+
+#### WSL / Linux
+
+```bash
+# Compilar imagen
+./scripts/docker-build.sh
+
+# Compilar e iniciar
+./scripts/build-and-run.sh
+
+# Solo iniciar (si ya compiló)
+./scripts/docker-up.sh
+
+# Detener
+./scripts/docker-down.sh
+```
+
+**Parámetros opcionales** (solo para `docker-build.sh` y `build-and-run.sh`):
+
+```bash
+# WSL/Linux - personalizar API URL y timeout
+./scripts/docker-build.sh http://localhost:8090/api/v1 30000
+./scripts/build-and-run.sh http://localhost:8090/api/v1 30000
+```
+
+```powershell
+# Windows PowerShell - nombres con `-`
+.\scripts\docker-build.ps1 -ApiUrl "http://localhost:8090/api/v1" -ApiTimeout "30000"
+.\scripts\build-and-run.ps1 -ApiUrl "http://localhost:8090/api/v1" -ApiTimeout "30000"
+```
+
 ## Ejecucion con Docker
 
 Este frontend se entrega para ejecutarse como imagen Docker (Nginx + SPA compilada).
