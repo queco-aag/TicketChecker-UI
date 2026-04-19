@@ -451,9 +451,113 @@ Todos los endpoints pueden devolver errores con el siguiente formato:
 
 ---
 
+## 🏗️ Arquitectura de Integración
+
+```
+┌─────────────────────┐         ┌──────────────────────┐
+│  TicketChecker-UI   │ ◄─────► │  TicketChecker API   │
+│   (React + Vite)    │  HTTP   │  (Backend Service)   │
+└─────────────────────┘         └──────────────────────┘
+         │                                │
+         ▼                                ▼
+   ┌──────────┐                    ┌──────────┐
+   │LocalStorage│                  │ Database │
+   └──────────┘                    └──────────┘
+```
+
+### Variables de entorno
+
+Crear un archivo `.env` en la raíz del proyecto:
+
+```env
+VITE_API_URL=http://localhost:8080/api/v1
+VITE_API_TIMEOUT=30000
+VITE_APP_TITLE=TicketChecker - ASPADIF
+```
+
+### Estructura de módulos API
+
+```
+src/shared/api/client.js
+├── ticketsAPI      – endpoints públicos (verificar, reclamar)
+├── authAPI         – autenticación (login, register, me)
+├── usuariosAPI     – gestión de usuarios (CRUD, toggle)
+├── rewardsAPI      – gestión de premios (CRUD, CSV, estados)
+├── emparejamientosAPI – asignación números-premios
+└── clavesAPI       – claves de sorteo y validación HMAC
+```
+
+---
+
+## 🔌 Interceptores HTTP
+
+### Request interceptor
+
+Agrega automáticamente el token JWT a las peticiones que requieren autenticación (las que definen `requiresAuth: true`):
+
+```javascript
+api.interceptors.request.use((config) => {
+  if (config.requiresAuth) {
+    const token = localStorage.getItem('ticketchecker.admin.token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
+});
+```
+
+### Response interceptor
+
+Maneja errores de forma centralizada y redirige cuando el token es inválido o ha expirado:
+
+```javascript
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('ticketchecker.admin.token');
+      window.location.href = '/admin/login';
+    }
+    return Promise.reject(error);
+  }
+);
+```
+
+---
+
+## 🔒 Seguridad y Validaciones
+
+- Los tokens JWT se almacenan en `localStorage` bajo la clave `ticketchecker.admin.token`.
+- Validación de archivos antes de enviar (tipo y tamaño).
+- Límite de tamaño de archivos de comprobante: 5 MB.
+- Tipos de archivo permitidos para comprobantes: JPG, PNG.
+- El backend debe configurar CORS para permitir peticiones desde el dominio del frontend:
+
+```
+Access-Control-Allow-Origin: https://ticketchecker.aspadif.org
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH
+Access-Control-Allow-Headers: Content-Type, Authorization
+```
+
+---
+
+## 🐛 Resolución de Problemas
+
+| Error | Causa probable | Solución |
+|-------|----------------|----------|
+| "No se pudo conectar con el servidor" | API no está ejecutándose | Verificar que el backend esté corriendo y revisar `VITE_API_URL` |
+| `401 Unauthorized` | Token expirado o inválido | Volver a iniciar sesión |
+| `403 Forbidden` | Sin permisos para el recurso | Verificar que el usuario tenga rol `ADMIN` |
+| `404 Not Found` | Ruta incorrecta | Verificar la versión de la API y las rutas en `client.js` |
+| `500 Internal Server Error` | Error en el backend | Revisar logs del servidor |
+| Error CORS en navegador | CORS no configurado en backend | Verificar configuración CORS del backend |
+
+---
+
 ## 📚 Ver También
 
-- [Contrato OpenAPI (README)](../../README.md#contrato-openapi-de-referencia) - Ruta oficial del contrato compartido
+- [Contrato OpenAPI](./openapi.yaml) - Especificación completa OpenAPI 3.0
+- [Referencia rápida de endpoints](./REFERENCIA_ENDPOINTS.md) - Tabla resumen de todos los endpoints
 - [README.md](../../README.md) - Documentación principal del proyecto
-- [MIGRATION_GUIDE.md](../migracion/MIGRATION_GUIDE.md) - Guía de migración v2.0
 

@@ -118,59 +118,40 @@ Indice principal:
 
 - `docs/README.md`
 
-Producto:
-
-- `docs/producto/RESUMEN_EJECUTIVO.md`
-- `docs/producto/SUMMARY.md`
-
 API:
 
 - `docs/api/README.md` - Índice de documentación de API y especificación OpenAPI
-- `docs/api/openapi.yaml` - **Especificación OpenAPI 3.0 del contrato de API**
-- `docs/api/REFERENCIA_ENDPOINTS.md` - **Referencia rápida de endpoints correctos** ⭐
-- `docs/api/API_CONTRATO_OPENAPI.md`
-- `docs/api/API_ENDPOINTS.md`
-- `docs/api/API_INTEGRATION.md`
-- `docs/api/API_INTEGRATION_GUIDE.md`
+- `docs/api/openapi.yaml` - **Especificación OpenAPI 3.0 del contrato de API** ⭐
+- `docs/api/REFERENCIA_ENDPOINTS.md` - **Referencia rápida de endpoints** ⭐
+- `docs/api/API_ENDPOINTS.md` - Referencia completa con ejemplos y guía de integración
 
 Migracion:
 
-- `docs/migracion/MIGRATION_GUIDE.md`
-- `docs/migracion/ADAPTACION_API.md`
-- `docs/migracion/INTEGRACION_COMPLETADA.md`
 - `docs/migracion/MIGRACION_Y_VALIDACION.md`
 
 Tecnico:
 
-- `docs/tecnico/ARQUITECTURA_FRONTEND.md`
-- `docs/tecnico/NUEVOS_FLUJOS.md` - Documentación completa de flujos rediseñados
-- `docs/tecnico/CAMPOS_MANTENIMIENTOS.md` - Detalle de todos los campos en mantenimientos
-- `docs/tecnico/FILE_INDEX.md`
+- `docs/tecnico/ARQUITECTURA_FRONTEND.md` ⭐
+- `docs/tecnico/NUEVOS_FLUJOS.md` - Flujos de UI rediseñados
+- `docs/tecnico/CAMPOS_MANTENIMIENTOS.md` - Detalle de campos en mantenimientos
+- `docs/tecnico/GUIA_PRIMEFLEX.md` - Referencia PrimeFlex
+- `docs/tecnico/QUE_ES_VITE.md`
 - `docs/tecnico/README_PROJECT_RESOURCES.md`
 
 Operacion y QA:
 
-- `docs/operacion/GETTING_STARTED.md`
-- `docs/operacion/VERIFICATION_CHECKLIST.md`
-- `docs/operacion/CHANGELOG.md`
-- `docs/operacion/CORRECCION_RESPUESTAS_ANIDADAS.md` - **✅ Corrección final - Todas las tablas muestran datos**
-- `docs/operacion/CORRECCIONES_OPENAPI_APLICADAS.md` - ⭐ Correcciones aplicadas - Frontend 100% alineado con backend
-- `docs/operacion/ANALISIS_OPENAPI_ACTUALIZADO.md` - Análisis del openapi.yaml actualizado
-- `docs/operacion/ALERTA_ENDPOINTS_NO_IMPLEMENTADOS.md` - ⚠️ Alerta: 20 endpoints no implementados en backend (OBSOLETO)
-- `docs/operacion/INTEGRACION_ENDPOINTS_COMPLETA.md` - Integración completa de endpoints del backend
-- `docs/operacion/ESTADO_ENDPOINTS_BACKEND.md` - Estado actual de endpoints implementados
-- `docs/operacion/RESUMEN_CORRECCIONES_ENDPOINTS.md` - Resumen de correcciones de endpoints (usuarios, emparejamientos, premios)
-- `docs/operacion/CORRECCION_ENDPOINTS.md` - Corrección detallada de endpoints incorrectos
-- `docs/operacion/CORRECCION_DATATABLE_ERROR.md` - Corrección del error data.slice is not a function
-- `docs/operacion/ANALISIS_DISCREPANCIAS_OPENAPI.md` - Análisis de discrepancias entre client.js y openapi.yaml (OBSOLETO)
-- `docs/operacion/GUIA_SINCRONIZACION_OPENAPI.md` - Guía para sincronizar openapi.yaml con el backend
-- `docs/operacion/INSTRUCCIONES_VERIFICACION_BACKEND.md` - Checklist para verificar endpoints del backend
+- `docs/operacion/GETTING_STARTED.md` - Arranque local y Docker
+- `docs/operacion/CHANGELOG.md` - Historial de cambios ⭐
+- `docs/operacion/ESTADO_ACTUAL_PROYECTO.md` - Estado completo del proyecto
+- `docs/operacion/ESTADO_ENDPOINTS_BACKEND.md` - Inventario de endpoints del backend
+- `docs/operacion/IMPLEMENTACION_API_COMPLETADA.md` - Detalle técnico de la implementación
+- `docs/operacion/GUIA_SINCRONIZACION_OPENAPI.md` - Guía para sincronizar el contrato OpenAPI
 
 ## Contrato OpenAPI de referencia
 
 El contrato OpenAPI que define la especificación de la API consumida por este frontend está incluido en el proyecto:
 
 - **Especificación local:** [`docs/api/openapi.yaml`](docs/api/openapi.yaml)
-- **Fuente compartida con backend:** `C:\Workspace\Particular\TicketChecker\src\main\resources\openapi.yaml`
+- **Fuente compartida con backend:** `TicketChecker/src/main/resources/openapi.yaml`
 
 La especificación local es una copia sincronizada del contrato del backend.

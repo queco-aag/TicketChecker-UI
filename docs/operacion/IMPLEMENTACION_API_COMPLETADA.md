@@ -189,6 +189,44 @@ src/shared/api/client.js
 - ✨ Agregado `authAPI.obtenerUsuario(id)`
 - ✨ Agregado `authAPI.toggleHabilitado(id)`
 - ✨ Agregado `rewardsAPI.obtenerPremio(id)`
+- ✨ Separado `usuariosAPI` de `authAPI` para mejor organización
+
+### Definición de módulos clave
+
+#### `usuariosAPI` (separado de `authAPI`)
+```javascript
+export const usuariosAPI = {
+  listarUsuarios:    () => api.get('/usuarios', { requiresAuth: true }),
+  obtenerPorId:      (id) => api.get(`/usuarios/${id}`, { requiresAuth: true }),
+  actualizarUsuario: (id, userData) => api.put(`/usuarios/${id}`, userData, { requiresAuth: true }),
+  eliminarUsuario:   (id) => api.delete(`/usuarios/${id}`, { requiresAuth: true }),
+  toggleHabilitado:  (id) => api.patch(`/usuarios/${id}/toggle-habilitado`, {}, { requiresAuth: true })
+};
+```
+
+#### `emparejamientosAPI`
+```javascript
+export const emparejamientosAPI = {
+  listar:           () => api.get('/numeros-premiados', { requiresAuth: true }),
+  obtenerPorNumero: (numero) => api.get(`/numeros-premiados/${numero}`, { requiresAuth: true }),
+  listarPorPremio:  (premioId) => api.get(`/numeros-premiados/premio/${premioId}`, { requiresAuth: true }),
+  asignar:          (emparejamiento) => api.post('/numeros-premiados', emparejamiento, { requiresAuth: true }),
+  eliminarPorNumero:(numero) => api.delete(`/numeros-premiados/${numero}`, { requiresAuth: true })
+};
+```
+
+> **Nota:** `emparejamientosAPI.actualizar()` fue eliminado ya que no existe endpoint `PUT` en el backend. Para modificar un emparejamiento hay que eliminar y crear uno nuevo.
+
+### Estructura de módulos del API client
+```
+src/shared/api/client.js
+├── ticketsAPI      – endpoints públicos (verificar, reclamar)
+├── authAPI         – autenticación (login, register, me, register-admin)
+├── usuariosAPI     – gestión de usuarios (CRUD, toggle)
+├── rewardsAPI      – gestión de premios (CRUD, CSV, estados)
+├── emparejamientosAPI – asignación números-premios
+└── clavesAPI       – claves de sorteo y validación HMAC
+```
 
 ### Páginas Admin
 ```
