@@ -151,20 +151,30 @@ const NumberPrizeMatchingPage = () => {
   };
 
   const confirmDelete = (emparejamiento) => {
+    const anio = emparejamiento?.premio?.anio;
     confirmDialog({
-      message: `¿Estás seguro de eliminar el emparejamiento del número ${emparejamiento.numero}?`,
+      message: `¿Estás seguro de eliminar el emparejamiento del número ${emparejamiento.numero} del año ${anio}?`,
       header: 'Confirmar eliminación',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sí, eliminar',
       rejectLabel: 'Cancelar',
       acceptClassName: 'p-button-danger',
-      accept: () => handleDelete(emparejamiento.numero)
+      accept: () => handleDelete(emparejamiento.numero, anio)
     });
   };
 
-  const handleDelete = async (numero) => {
+  const handleDelete = async (numero, anio) => {
+    if (!anio) {
+      toast.current.show({
+        severity: 'warn',
+        summary: 'Año no disponible',
+        detail: 'No se pudo determinar el año del emparejamiento.',
+        life: 3000
+      });
+      return;
+    }
     try {
-      await emparejamientosAPI.eliminarPorNumero(numero);
+      await emparejamientosAPI.eliminarPorNumero(numero, anio);
       toast.current.show({
         severity: 'success',
         summary: 'Emparejamiento eliminado',

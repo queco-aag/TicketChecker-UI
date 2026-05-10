@@ -1,13 +1,35 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
+import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
-import { rewardsAPI } from '../../shared/api/client';
+import { rewardsAPI, clavesAPI } from '../../shared/api/client';
 
 const UploadCsvPage = () => {
   const toast = useRef(null);
   const [file, setFile] = useState(null);
+  const [availableYears, setAvailableYears] = useState([]);
+  const [anio, setAnio] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const loadAvailableYears = async () => {
+      try {
+        const { data } = await clavesAPI.listar();
+        const years = (data?.claves || [])
+          .map((clave) => clave?.anio)
+          .filter((year) => Number.isInteger(year))
+          .sort((a, b) => b - a);
+        setAvailableYears(years);
+        if (years.length > 0) {
+          setAnio(years[0]);
+        }
+      } catch (error) {
+        setAvailableYears([]);
+      }
+    };
+    loadAvailableYears();
+  }, []);
 
   const upload = async () => {
     if (!file) {
@@ -20,9 +42,20 @@ const UploadCsvPage = () => {
       return;
     }
 
+    if (!anio) {
+      toast.current.show({
+        severity: 'warn',
+        summary: 'Año requerido',
+        detail: 'Selecciona el año del sorteo para esta carga.',
+        life: 3000
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       const formData = new FormData();
+      formData.append('anio', anio);
       formData.append('file', file);
       const { data } = await rewardsAPI.cargarCSV(formData);
 
@@ -58,6 +91,21 @@ const UploadCsvPage = () => {
 
       <Card>
         <div className="p-fluid">
+          <div className="field">
+            <label htmlFor="anioSorteo">Año del sorteo</label>
+            <Dropdown
+              id="anioSorteo"
+              value={anio}
+              options={availableYears.map((year) => ({ label: `Año ${year}`, value: year }))}
+              onChange={(event) => setAnio(event.value)}
+              placeholder="Selecciona año"
+              disabled={availableYears.length === 0}
+            />
+            <small className="text-muted">
+              Debe existir una clave registrada para el año seleccionado.
+            </small>
+          </div>
+
           <div className="field">
             <label htmlFor="csvFile">Archivo CSV</label>
             <input
@@ -95,7 +143,7 @@ numero,nombrePremio,descripcionPremio,urlFotoPremio,anio
               label="Cargar Premios"
               icon="pi pi-upload"
               onClick={upload}
-              disabled={!file}
+              disabled={!file || !anio}
               loading={loading}
               className="p-button-success"
             />

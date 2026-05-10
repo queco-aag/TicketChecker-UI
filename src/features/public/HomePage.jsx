@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
@@ -7,13 +7,14 @@ import { Dialog } from 'primereact/dialog';
 import { Password } from 'primereact/password';
 import { Toast } from 'primereact/toast';
 import { Divider } from 'primereact/divider';
-import { ticketsAPI, authAPI } from '../../shared/api/client';
+import { ticketsAPI, authAPI, publicConfigAPI } from '../../shared/api/client';
 import { saveSession } from '../../shared/auth/authStorage';
 
 const HomePage = () => {
   const toast = useRef(null);
   const navigate = useNavigate();
   const [numero, setNumero] = useState('');
+  const [activeYear, setActiveYear] = useState(new Date().getFullYear());
   const [loading, setLoading] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
 
@@ -21,6 +22,20 @@ const HomePage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
+
+  useEffect(() => {
+    const cargarConfigPublica = async () => {
+      try {
+        const { data } = await publicConfigAPI.obtener();
+        if (Number.isInteger(data?.activeYear)) {
+          setActiveYear(data.activeYear);
+        }
+      } catch (error) {
+        // Si falla la carga, se mantiene el año actual local como fallback.
+      }
+    };
+    cargarConfigPublica();
+  }, []);
 
   const verificarNumero = async () => {
     if (!numero.trim()) {
@@ -168,7 +183,7 @@ const HomePage = () => {
           <div className="decimo-mockup">
             <div className="decimo-header">
               <span>SORTEO ASPADIF</span>
-              <span className="decimo-year">2026</span>
+              <span className="decimo-year">{activeYear}</span>
             </div>
             <div className="decimo-body">
               <div className="decimo-number-display">00000</div>

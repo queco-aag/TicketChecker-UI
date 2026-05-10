@@ -17,7 +17,7 @@ const NumbersVerificationListPage = () => {
   const [globalFilter, setGlobalFilter] = useState('');
   const [yearFilter, setYearFilter] = useState(new Date().getFullYear());
   const [rangoDesde, setRangoDesde] = useState(1);
-  const [rangoHasta, setRangoHasta] = useState(100000);
+  const [rangoHasta, setRangoHasta] = useState(5000);
   const [availableYears, setAvailableYears] = useState([]);
 
   const loadAvailableYears = useCallback(async () => {
@@ -227,7 +227,7 @@ const NumbersVerificationListPage = () => {
         />
         <InputNumber
           value={rangoHasta}
-          onValueChange={(e) => setRangoHasta(e.value || 100000)}
+          onValueChange={(e) => setRangoHasta(e.value || 5000)}
           placeholder="Hasta"
           min={1}
           showButtons

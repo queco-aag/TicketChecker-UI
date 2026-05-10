@@ -48,6 +48,10 @@ export const ticketsAPI = {
     })
 };
 
+export const publicConfigAPI = {
+  obtener: () => api.get('/public-config')
+};
+
 export const rewardsAPI = {
   // Carga masiva
   cargarCSV: (formData) =>
@@ -121,10 +125,12 @@ export const authAPI = {
 
 export const emparejamientosAPI = {
   listar: () => api.get('/numeros-premiados', { requiresAuth: true }),
-  obtenerPorNumero: (numero) => api.get(`/numeros-premiados/${encodeURIComponent(numero)}`, { requiresAuth: true }),
+  obtenerPorNumero: (numero, anio) =>
+    api.get(`/numeros-premiados/${encodeURIComponent(numero)}`, { params: { anio }, requiresAuth: true }),
   listarPorPremio: (premioId) => api.get(`/numeros-premiados/premio/${premioId}`, { requiresAuth: true }),
   asignar: (emparejamiento) => api.post('/numeros-premiados', emparejamiento, { requiresAuth: true }),
-  eliminarPorNumero: (numero) => api.delete(`/numeros-premiados/${encodeURIComponent(numero)}`, { requiresAuth: true })
+  eliminarPorNumero: (numero, anio) =>
+    api.delete(`/numeros-premiados/${encodeURIComponent(numero)}`, { params: { anio }, requiresAuth: true })
 };
 
 export const clavesAPI = {
