@@ -1,5 +1,7 @@
 param(
-    [string]$ApiUrl = "http://localhost:8080/api/v1",
+    # En Docker con nginx proxy usar /api/v1 (relativo).
+    # Para llamada directa desde el host usar http://localhost:8090/api/v1
+    [string]$ApiUrl = "/api/v1",
     [string]$ApiTimeout = "30000",
     [switch]$NoCache,
     [switch]$Help

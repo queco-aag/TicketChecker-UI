@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken, removeSession } from '../auth/authStorage';
 
 // Llamar directamente al backend (requiere CORS habilitado en el backend)
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8090/api/v1';
 const API_TIMEOUT = Number(import.meta.env.VITE_API_TIMEOUT) || 30000;
 
 const api = axios.create({

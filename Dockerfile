@@ -2,7 +2,9 @@
 FROM node:20.19-alpine AS build
 WORKDIR /app
 
-ARG VITE_API_URL=http://localhost:8080/api/v1
+# Cuando se despliega en Docker con nginx como proxy, la URL es relativa (/api/v1).
+# Para desarrollo local directo usa: http://localhost:8090/api/v1
+ARG VITE_API_URL=/api/v1
 ARG VITE_API_TIMEOUT=30000
 ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_API_TIMEOUT=$VITE_API_TIMEOUT

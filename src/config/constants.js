@@ -11,7 +11,7 @@ export const ASPADIF_COLORS = {
 
 export const APP_CONFIG = {
   title: import.meta.env.VITE_APP_TITLE || 'TicketChecker - ASPADIF',
-  apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+  apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:8090/api/v1',
   maxFileSize: 5 * 1024 * 1024, // 5MB
   allowedImageTypes: ['image/jpeg', 'image/png', 'image/jpg'],
 };

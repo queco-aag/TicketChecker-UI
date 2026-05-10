@@ -14,7 +14,7 @@ export const getImageUrl = (rutaFoto) => {
   }
 
   // Obtener la URL base del backend sin el /api/v1
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1';
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8090/api/v1';
   const baseUrl = apiUrl.replace('/api/v1', '');
 
   // Si la URL empieza con /uploads/, construir la URL completa
