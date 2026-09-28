@@ -523,6 +523,14 @@ a {
   gap: 1rem;
 }
 
+.aspadif-logo-image {
+  width: 4.5rem;
+  height: 4.5rem;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
+}
+
 .logo-aspadif h1 {
   margin: 0;
   font-size: 2.5rem;
@@ -562,53 +570,13 @@ a {
   margin-bottom: 2rem;
 }
 
-.decimo-mockup {
+.decimo-image {
   width: 100%;
-  max-width: 500px;
-  background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-  border: 3px solid #2d3436;
+  max-width: 760px;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
-}
-
-.decimo-header {
-  background: #2d3436;
-  color: white;
-  padding: 0.8rem 1.2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 700;
-  font-size: 0.95rem;
-}
-
-.decimo-year {
-  font-size: 1.3rem;
-  letter-spacing: 0.1em;
-}
-
-.decimo-body {
-  padding: 2rem 1.5rem;
-  text-align: center;
-}
-
-.decimo-number-display {
-  font-size: 4rem;
-  font-weight: 900;
-  color: #2d3436;
-  letter-spacing: 0.2em;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1rem;
-}
-
-.decimo-details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  font-size: 0.9rem;
-  color: #2d3436;
-  font-weight: 600;
+  display: block;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  object-fit: contain;
 }
 
 .search-card {
@@ -640,12 +608,28 @@ a {
 }
 
 .search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
   flex: 1;
+}
+
+.search-input-wrapper i,
+.search-input-wrapper .input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: #64748b;
+  line-height: 1;
+  pointer-events: none;
 }
 
 .search-input {
   font-size: 1.1rem;
-  padding: 0.85rem 1rem 0.85rem 3rem !important;
+  padding: 0.85rem 1rem 0.85rem 3.1rem !important;
+  min-height: 3.25rem;
 }
 
 .search-button {

@@ -9,6 +9,8 @@ import { Toast } from 'primereact/toast';
 import { Divider } from 'primereact/divider';
 import { ticketsAPI, authAPI, publicConfigAPI } from '../../shared/api/client';
 import { saveSession } from '../../shared/auth/authStorage';
+import papeletaImage from '../../assets/papeleta.jpeg';
+import aspadifLogo from '../../assets/aspadif.jpg';
 
 const HomePage = () => {
   const toast = useRef(null);
@@ -162,7 +164,7 @@ const HomePage = () => {
       <div className="home-header">
         <div className="logo-container">
           <div className="logo-aspadif">
-            <i className="pi pi-gift" style={{ fontSize: '3rem', color: '#1976d2' }} />
+            <img src={aspadifLogo} alt="ASPADIF" className="aspadif-logo-image" />
             <h1>ASPADIF</h1>
           </div>
           <p className="tagline">Sorteo Solidario</p>
@@ -180,19 +182,11 @@ const HomePage = () => {
       {/* Hero section con imagen de décimo */}
       <div className="hero-section">
         <div className="decimo-display">
-          <div className="decimo-mockup">
-            <div className="decimo-header">
-              <span>SORTEO ASPADIF</span>
-              <span className="decimo-year">{activeYear}</span>
-            </div>
-            <div className="decimo-body">
-              <div className="decimo-number-display">00000</div>
-              <div className="decimo-details">
-                <span>Sorteo Solidario</span>
-                <span>Consulta si tu número tiene premio</span>
-              </div>
-            </div>
-          </div>
+          <img
+            src={papeletaImage}
+            alt="Papeleta del sorteo ASPADIF"
+            className="decimo-image"
+          />
         </div>
 
         <Divider />
